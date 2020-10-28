@@ -1,5 +1,10 @@
 # Add any directories, files, or patterns you don't want to be tracked by version control
 lib/
 bin/
+autoapp_autogen/
+btservice_autogen/
 build/
+.vscode/
+.idea/
+cmake-build-*
 CMakeLists.txt.user
