@@ -1,0 +1,18 @@
+include(ExternalProject)
+
+set(EXT_STAGING_DIR ${CMAKE_CURRENT_BINARY_DIR}/staging${CMAKE_INSTALL_PREFIX})
+
+ExternalProject_Add(dep-aasdk
+    GIT_REPOSITORY https://github.com/jwinarske/aasdk.git
+    GIT_TAG update
+    GIT_SHALLOW ON
+    CMAKE_ARGS
+        -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+        -D CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+        -D CMAKE_STAGING_PREFIX=${EXT_STAGING_DIR}
+        -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        -D CMAKE_VERBOSE_MAKEFILE=ON
+        -D AASDK_TEST=OFF
+        -D AASDK_CODE_COVERAGE=OFF
+)
+

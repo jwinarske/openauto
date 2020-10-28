@@ -32,7 +32,7 @@ namespace autoapp
 namespace projection
 {
 
-class InputDevice: public QObject, public IInputDevice, boost::noncopyable
+class InputDevice: public QObject, public IInputDevice
 {
     Q_OBJECT
 
@@ -58,6 +58,8 @@ private:
     QRect displayGeometry_;
     IInputDeviceEventHandler* eventHandler_;
     std::mutex mutex_;
+
+    InputDevice(const InputDevice&) = delete;
 };
 
 }
