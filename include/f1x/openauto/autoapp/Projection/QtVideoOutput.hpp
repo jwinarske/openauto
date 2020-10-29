@@ -20,7 +20,6 @@
 
 #include <QMediaPlayer>
 #include <QVideoWidget>
-#include <boost/noncopyable.hpp>
 #include <f1x/openauto/autoapp/Projection/VideoOutput.hpp>
 #include <f1x/openauto/autoapp/Projection/SequentialBuffer.hpp>
 
