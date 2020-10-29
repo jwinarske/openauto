@@ -18,7 +18,6 @@
 
 #include <QApplication>
 #include <f1x/aasdk/TCP/TCPWrapper.hpp>
-#include <f1x/aasdk/USB/AccessoryModeQueryChain.hpp>
 #include <f1x/aasdk/USB/AccessoryModeQueryChainFactory.hpp>
 #include <f1x/aasdk/USB/AccessoryModeQueryFactory.hpp>
 #include <f1x/aasdk/USB/ConnectedAccessoriesEnumerator.hpp>
@@ -26,7 +25,6 @@
 #include <f1x/openauto/Common/Log.hpp>
 #include <f1x/openauto/autoapp/App.hpp>
 #include <f1x/openauto/autoapp/Configuration/Configuration.hpp>
-#include <f1x/openauto/autoapp/Configuration/IConfiguration.hpp>
 #include <f1x/openauto/autoapp/Configuration/RecentAddressesList.hpp>
 #include <f1x/openauto/autoapp/Service/AndroidAutoEntityFactory.hpp>
 #include <f1x/openauto/autoapp/Service/ServiceFactory.hpp>
@@ -105,14 +103,14 @@ int main(int argc, char* argv[]) {
   QObject::connect(&mainWindow, &autoapp::ui::MainWindow::openConnectDialog,
                    &connectDialog, &autoapp::ui::ConnectDialog::exec);
 
-  qApplication.setOverrideCursor(Qt::BlankCursor);
+  QApplication::setOverrideCursor(Qt::BlankCursor);
   QObject::connect(
-      &mainWindow, &autoapp::ui::MainWindow::toggleCursor, [&qApplication]() {
+      &mainWindow, &autoapp::ui::MainWindow::toggleCursor, []() {
         const auto cursor =
-            qApplication.overrideCursor()->shape() == Qt::BlankCursor
+            QApplication::overrideCursor()->shape() == Qt::BlankCursor
                 ? Qt::ArrowCursor
                 : Qt::BlankCursor;
-        qApplication.setOverrideCursor(cursor);
+        QApplication::setOverrideCursor(cursor);
       });
 
   // mainWindow.showFullScreen();
@@ -141,7 +139,7 @@ int main(int argc, char* argv[]) {
 
   app->waitForUSBDevice();
 
-  auto result = qApplication.exec();
+  auto result = QApplication::exec();
   std::for_each(threadPool.begin(), threadPool.end(),
                 std::bind(&std::thread::join, std::placeholders::_1));
 

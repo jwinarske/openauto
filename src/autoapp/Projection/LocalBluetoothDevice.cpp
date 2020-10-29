@@ -112,7 +112,7 @@ void LocalBluetoothDevice::onStartPairing(const QString& address,
 
 void LocalBluetoothDevice::onPairingDisplayConfirmation(
     const QBluetoothAddress& address,
-    QString pin) {
+    const QString& pin) {
   OPENAUTO_LOG(debug)
       << "[LocalBluetoothDevice] onPairingDisplayConfirmation, address: "
       << address.toString().toStdString() << ", pin: " << pin.toStdString();
@@ -123,7 +123,7 @@ void LocalBluetoothDevice::onPairingDisplayConfirmation(
 
 void LocalBluetoothDevice::onPairingDisplayPinCode(
     const QBluetoothAddress& address,
-    QString pin) {
+    const QString& pin) {
   OPENAUTO_LOG(debug)
       << "[LocalBluetoothDevice] onPairingDisplayPinCode, address: "
       << address.toString().toStdString() << ", pin: " << pin.toStdString();

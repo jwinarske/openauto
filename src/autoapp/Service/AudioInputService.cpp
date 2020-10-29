@@ -16,7 +16,6 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <time.h>
 #include <f1x/openauto/Common/Log.hpp>
 #include <f1x/openauto/autoapp/Service/AudioInputService.hpp>
 
@@ -179,7 +178,7 @@ void AudioInputService::onAudioInputOpenSucceed() {
   this->readAudioInput();
 }
 
-void AudioInputService::onAudioInputDataReady(aasdk::common::Data data) {
+void AudioInputService::onAudioInputDataReady(const aasdk::common::Data& data) {
   auto sendPromise = aasdk::channel::SendPromise::defer(strand_);
   sendPromise->then(
       std::bind(&AudioInputService::readAudioInput, this->shared_from_this()),
@@ -189,7 +188,7 @@ void AudioInputService::onAudioInputDataReady(aasdk::common::Data data) {
   auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
       std::chrono::high_resolution_clock::now().time_since_epoch());
   channel_->sendAVMediaWithTimestampIndication(
-      timestamp.count(), std::move(data), std::move(sendPromise));
+      timestamp.count(), data, std::move(sendPromise));
 }
 
 void AudioInputService::readAudioInput() {
@@ -198,7 +197,7 @@ void AudioInputService::readAudioInput() {
     readPromise->then(
         std::bind(&AudioInputService::onAudioInputDataReady,
                   this->shared_from_this(), std::placeholders::_1),
-        [this, self = this->shared_from_this()]() {
+        [self = this->shared_from_this()]() {
           OPENAUTO_LOG(info)
               << "[AudioInputService] audio input read rejected.";
         });

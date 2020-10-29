@@ -131,7 +131,7 @@ int RtAudioOutput::audioBufferReadHandler(void* outputBuffer,
                                           double streamTime,
                                           RtAudioStreamStatus status,
                                           void* userData) {
-  RtAudioOutput* self = static_cast<RtAudioOutput*>(userData);
+  auto* self = static_cast<RtAudioOutput*>(userData);
   std::lock_guard<decltype(self->mutex_)> lock(self->mutex_);
 
   const auto bufferSize =

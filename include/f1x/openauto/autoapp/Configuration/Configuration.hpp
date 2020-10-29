@@ -91,42 +91,50 @@ class Configuration : public IConfiguration {
   bool speechAudiochannelEnabled_;
   AudioOutputBackendType audioOutputBackendType_;
 
-  static const std::string cConfigFileName;
+  static constexpr char cConfigFileName[] = "openauto.ini";
 
-  static const std::string cGeneralShowClockKey;
-  static const std::string cGeneralHandednessOfTrafficTypeKey;
+  static constexpr char cGeneralShowClockKey[] = "General.ShowClock";
+  static constexpr char cGeneralHandednessOfTrafficTypeKey[] =
+      "General.HandednessOfTrafficType";
 
-  static const std::string cVideoFPSKey;
-  static const std::string cVideoResolutionKey;
-  static const std::string cVideoScreenDPIKey;
-  static const std::string cVideoOMXLayerIndexKey;
-  static const std::string cVideoMarginWidth;
-  static const std::string cVideoMarginHeight;
+  static constexpr char cVideoFPSKey[] = "Video.FPS";
+  static constexpr char cVideoResolutionKey[] = "Video.Resolution";
+  static constexpr char cVideoScreenDPIKey[] = "Video.ScreenDPI";
+  static constexpr char cVideoOMXLayerIndexKey[] = "Video.OMXLayerIndex";
+  static constexpr char cVideoMarginWidth[] = "Video.MarginWidth";
+  static constexpr char cVideoMarginHeight[] = "Video.MarginHeight";
 
-  static const std::string cAudioMusicAudioChannelEnabled;
-  static const std::string cAudioSpeechAudioChannelEnabled;
-  static const std::string cAudioOutputBackendType;
+  static constexpr char cAudioMusicAudioChannelEnabled[] =
+      "Audio.MusicAudioChannelEnabled";
+  static constexpr char cAudioSpeechAudioChannelEnabled[] =
+      "Audio.SpeechAudioChannelEnabled";
+  static constexpr char cAudioOutputBackendType[] = "Audio.OutputBackendType";
 
-  static const std::string cBluetoothAdapterTypeKey;
-  static const std::string cBluetoothRemoteAdapterAddressKey;
+  static constexpr char cBluetoothAdapterTypeKey[] = "Bluetooth.AdapterType";
+  static constexpr char cBluetoothRemoteAdapterAddressKey[] =
+      "Bluetooth.RemoteAdapterAddress";
 
-  static const std::string cInputEnableTouchscreenKey;
-  static const std::string cInputPlayButtonKey;
-  static const std::string cInputPauseButtonKey;
-  static const std::string cInputTogglePlayButtonKey;
-  static const std::string cInputNextTrackButtonKey;
-  static const std::string cInputPreviousTrackButtonKey;
-  static const std::string cInputHomeButtonKey;
-  static const std::string cInputPhoneButtonKey;
-  static const std::string cInputCallEndButtonKey;
-  static const std::string cInputVoiceCommandButtonKey;
-  static const std::string cInputLeftButtonKey;
-  static const std::string cInputRightButtonKey;
-  static const std::string cInputUpButtonKey;
-  static const std::string cInputDownButtonKey;
-  static const std::string cInputScrollWheelButtonKey;
-  static const std::string cInputBackButtonKey;
-  static const std::string cInputEnterButtonKey;
+  static constexpr char cInputEnableTouchscreenKey[] =
+      "Input.EnableTouchscreen";
+  static constexpr char cInputPlayButtonKey[] = "Input.PlayButton";
+  static constexpr char cInputPauseButtonKey[] = "Input.PauseButton";
+  static constexpr char cInputTogglePlayButtonKey[] = "Input.TogglePlayButton";
+  static constexpr char cInputNextTrackButtonKey[] = "Input.NextTrackButton";
+  static constexpr char cInputPreviousTrackButtonKey[] =
+      "Input.PreviousTrackButton";
+  static constexpr char cInputHomeButtonKey[] = "Input.HomeButton";
+  static constexpr char cInputPhoneButtonKey[] = "Input.PhoneButton";
+  static constexpr char cInputCallEndButtonKey[] = "Input.CallEndButton";
+  static constexpr char cInputVoiceCommandButtonKey[] =
+      "Input.VoiceCommandButton";
+  static constexpr char cInputLeftButtonKey[] = "Input.LeftButton";
+  static constexpr char cInputRightButtonKey[] = "Input.RightButton";
+  static constexpr char cInputUpButtonKey[] = "Input.UpButton";
+  static constexpr char cInputDownButtonKey[] = "Input.DownButton";
+  static constexpr char cInputScrollWheelButtonKey[] =
+      "Input.ScrollWheelButton";
+  static constexpr char cInputBackButtonKey[] = "Input.BackButton";
+  static constexpr char cInputEnterButtonKey[] = "Input.EnterButton";
 };
 
 }  // namespace configuration

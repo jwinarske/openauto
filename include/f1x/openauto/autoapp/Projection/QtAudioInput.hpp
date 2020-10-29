@@ -48,7 +48,7 @@ class QtAudioInput : public QObject, public IAudioInput {
 
  private slots:
   void createAudioInput();
-  void onStartRecording(StartPromise::Pointer promise);
+  void onStartRecording(const StartPromise::Pointer& promise);
   void onStopRecording();
   void onReadyRead();
 

@@ -25,11 +25,9 @@ namespace openauto {
 namespace autoapp {
 namespace configuration {
 
-const std::string RecentAddressesList::cConfigFileName =
-    "openauto_wifi_recent.ini";
-const std::string RecentAddressesList::cRecentEntiresCount =
-    "Recent.EntiresCount";
-const std::string RecentAddressesList::cRecentEntryPrefix = "Recent.Entry_";
+constexpr char RecentAddressesList::cConfigFileName[];
+constexpr char RecentAddressesList::cRecentEntiresCount[];
+constexpr char RecentAddressesList::cRecentEntryPrefix[];
 
 RecentAddressesList::RecentAddressesList(size_t maxListSize)
     : maxListSize_(maxListSize) {}

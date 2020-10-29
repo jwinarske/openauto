@@ -41,9 +41,9 @@ class RecentAddressesList : public IRecentAddressesList {
   size_t maxListSize_;
   RecentAddresses list_;
 
-  static const std::string cConfigFileName;
-  static const std::string cRecentEntiresCount;
-  static const std::string cRecentEntryPrefix;
+  static constexpr char cConfigFileName[] = "openauto_wifi_recent.ini";
+  static constexpr char cRecentEntiresCount[] = "Recent.EntiresCount";
+  static constexpr char cRecentEntryPrefix[] = "Recent.Entry_";
 };
 
 }  // namespace configuration

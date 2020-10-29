@@ -98,7 +98,7 @@ uint32_t QtAudioInput::getSampleRate() const {
   return audioFormat_.sampleRate();
 }
 
-void QtAudioInput::onStartRecording(StartPromise::Pointer promise) {
+void QtAudioInput::onStartRecording(const StartPromise::Pointer& promise) {
   std::lock_guard<decltype(mutex_)> lock(mutex_);
 
   ioDevice_ = audioInput_->start();

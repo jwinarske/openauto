@@ -137,8 +137,8 @@ void InputService::onButtonEvent(const projection::ButtonEvent& event) {
       std::chrono::high_resolution_clock::now().time_since_epoch());
 
   strand_.dispatch([this, self = this->shared_from_this(),
-                    event = std::move(event),
-                    timestamp = std::move(timestamp)]() {
+                    event = event,
+                    timestamp = timestamp]() {
     aasdk::proto::messages::InputEventIndication inputEventIndication;
     inputEventIndication.set_timestamp(timestamp.count());
 
@@ -172,8 +172,8 @@ void InputService::onTouchEvent(const projection::TouchEvent& event) {
       std::chrono::high_resolution_clock::now().time_since_epoch());
 
   strand_.dispatch([this, self = this->shared_from_this(),
-                    event = std::move(event),
-                    timestamp = std::move(timestamp)]() {
+                    event = event,
+                    timestamp = timestamp]() {
     aasdk::proto::messages::InputEventIndication inputEventIndication;
     inputEventIndication.set_timestamp(timestamp.count());
 

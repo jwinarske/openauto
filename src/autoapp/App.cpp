@@ -120,10 +120,10 @@ void App::enumerateDevices() {
   auto promise =
       aasdk::usb::IConnectedAccessoriesEnumerator::Promise::defer(strand_);
   promise->then(
-      [this, self = this->shared_from_this()](auto result) {
+      [self = this->shared_from_this()](auto result) {
         OPENAUTO_LOG(info) << "[App] Devices enumeration result: " << result;
       },
-      [this, self = this->shared_from_this()](auto e) {
+      [self = this->shared_from_this()](auto e) {
         OPENAUTO_LOG(error) << "[App] Devices enumeration failed: " << e.what();
       });
 

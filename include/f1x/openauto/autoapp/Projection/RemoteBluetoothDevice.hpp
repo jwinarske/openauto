@@ -27,7 +27,7 @@ namespace projection {
 
 class RemoteBluetoothDevice : public IBluetoothDevice {
  public:
-  RemoteBluetoothDevice(const std::string& address);
+  RemoteBluetoothDevice(std::string  address);
 
   void stop() override;
   bool isPaired(const std::string& address) const override;

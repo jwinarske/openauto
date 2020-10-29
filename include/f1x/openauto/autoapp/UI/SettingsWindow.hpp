@@ -44,14 +44,14 @@ class SettingsWindow : public QWidget {
   void onSave();
   void onResetToDefaults();
   void onUpdateScreenDPI(int value);
-  void onShowBindings();
+  static void onShowBindings();
 
  private:
   void showEvent(QShowEvent* event);
   void load();
   void loadButtonCheckBoxes();
   void saveButtonCheckBoxes();
-  void saveButtonCheckBox(
+  static void saveButtonCheckBox(
       const QCheckBox* checkBox,
       configuration::IConfiguration::ButtonCodes& buttonCodes,
       aasdk::proto::enums::ButtonCode::Enum buttonCode);

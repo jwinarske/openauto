@@ -59,7 +59,7 @@ bool InputDevice::eventFilter(QObject* obj, QEvent* event) {
   if (eventHandler_ != nullptr) {
     if (event->type() == QEvent::KeyPress ||
         event->type() == QEvent::KeyRelease) {
-      QKeyEvent* key = static_cast<QKeyEvent*>(event);
+      auto* key = dynamic_cast<QKeyEvent*>(event);
       if (!key->isAutoRepeat()) {
         return this->handleKeyEvent(event, key);
       }
@@ -191,16 +191,16 @@ bool InputDevice::handleTouchEvent(QEvent* event) {
       break;
     default:
       return true;
-  };
+  }
 
-  QMouseEvent* mouse = static_cast<QMouseEvent*>(event);
+  auto* mouse = dynamic_cast<QMouseEvent*>(event);
   if (event->type() == QEvent::MouseButtonRelease ||
       mouse->buttons().testFlag(Qt::LeftButton)) {
     const uint32_t x =
-        (static_cast<float>(mouse->pos().x()) / touchscreenGeometry_.width()) *
+        (mouse->pos().x() / touchscreenGeometry_.width()) *
         displayGeometry_.width();
     const uint32_t y =
-        (static_cast<float>(mouse->pos().y()) / touchscreenGeometry_.height()) *
+        (mouse->pos().y() / touchscreenGeometry_.height()) *
         displayGeometry_.height();
     eventHandler_->onTouchEvent({type, x, y, 0});
   }

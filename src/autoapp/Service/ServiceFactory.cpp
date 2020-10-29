@@ -18,13 +18,10 @@
 
 #include <QApplication>
 #include <QScreen>
-#include <f1x/aasdk/Channel/AV/MediaAudioServiceChannel.hpp>
-#include <f1x/aasdk/Channel/AV/SpeechAudioServiceChannel.hpp>
 #include <f1x/aasdk/Channel/AV/SystemAudioServiceChannel.hpp>
 #include <f1x/openauto/autoapp/Projection/DummyBluetoothDevice.hpp>
 #include <f1x/openauto/autoapp/Projection/InputDevice.hpp>
 #include <f1x/openauto/autoapp/Projection/LocalBluetoothDevice.hpp>
-#include <f1x/openauto/autoapp/Projection/OMXVideoOutput.hpp>
 #include <f1x/openauto/autoapp/Projection/QtAudioInput.hpp>
 #include <f1x/openauto/autoapp/Projection/QtAudioOutput.hpp>
 #include <f1x/openauto/autoapp/Projection/QtVideoOutput.hpp>
@@ -70,7 +67,7 @@ ServiceList ServiceFactory::create(
 }
 
 IService::Pointer ServiceFactory::createVideoService(
-    aasdk::messenger::IMessenger::Pointer messenger) {
+    const aasdk::messenger::IMessenger::Pointer& messenger) {
 #ifdef USE_OMX
   auto videoOutput(
       std::make_shared<projection::OMXVideoOutput>(configuration_));
@@ -84,7 +81,7 @@ IService::Pointer ServiceFactory::createVideoService(
 }
 
 IService::Pointer ServiceFactory::createBluetoothService(
-    aasdk::messenger::IMessenger::Pointer messenger) {
+    const aasdk::messenger::IMessenger::Pointer& messenger) {
   projection::IBluetoothDevice::Pointer bluetoothDevice;
   switch (configuration_->getBluetoothAdapterType()) {
     case configuration::BluetoothAdapterType::LOCAL:
@@ -108,7 +105,7 @@ IService::Pointer ServiceFactory::createBluetoothService(
 }
 
 IService::Pointer ServiceFactory::createInputService(
-    aasdk::messenger::IMessenger::Pointer messenger) {
+    const aasdk::messenger::IMessenger::Pointer& messenger) {
   QRect videoGeometry;
   switch (configuration_->getVideoResolution()) {
     case aasdk::proto::enums::VideoResolution::_720p:
@@ -129,8 +126,8 @@ IService::Pointer ServiceFactory::createInputService(
       screen == nullptr ? QRect(0, 0, 1, 1) : screen->geometry();
   projection::IInputDevice::Pointer inputDevice(
       std::make_shared<projection::InputDevice>(
-          *QApplication::instance(), configuration_, std::move(screenGeometry),
-          std::move(videoGeometry)));
+          *QApplication::instance(), configuration_, screenGeometry,
+          videoGeometry));
 
   return std::make_shared<InputService>(ioService_, messenger,
                                         std::move(inputDevice));
@@ -138,7 +135,7 @@ IService::Pointer ServiceFactory::createInputService(
 
 void ServiceFactory::createAudioServices(
     ServiceList& serviceList,
-    aasdk::messenger::IMessenger::Pointer messenger) {
+    const aasdk::messenger::IMessenger::Pointer& messenger) {
   if (configuration_->musicAudioChannelEnabled()) {
     auto mediaAudioOutput =
         configuration_->getAudioOutputBackendType() ==

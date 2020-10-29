@@ -35,7 +35,7 @@ class ConnectDialog : public QDialog {
  private slots:
   void onConnectButtonClicked();
   void onConnectionFailed(const QString& message);
-  void onConnectionSucceed(aasdk::tcp::ITCPEndpoint::SocketPointer socket,
+  void onConnectionSucceed(const aasdk::tcp::ITCPEndpoint::SocketPointer& socket,
                            const std::string& ipAddress);
   void onRecentAddressClicked(const QModelIndex& index);
 

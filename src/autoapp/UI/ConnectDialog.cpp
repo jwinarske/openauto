@@ -69,7 +69,7 @@ void ConnectDialog::connectHandler(
   }
 }
 
-void ConnectDialog::onConnectionSucceed(aasdk::tcp::ITCPEndpoint::SocketPointer,
+void ConnectDialog::onConnectionSucceed(const aasdk::tcp::ITCPEndpoint::SocketPointer&,
                                         const std::string& ipAddress) {
   this->insertIpAddress(ipAddress);
   this->setControlsEnabledStatus(true);

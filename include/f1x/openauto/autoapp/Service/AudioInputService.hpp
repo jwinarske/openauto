@@ -55,7 +55,7 @@ class AudioInputService
  private:
   using std::enable_shared_from_this<AudioInputService>::shared_from_this;
   void onAudioInputOpenSucceed();
-  void onAudioInputDataReady(aasdk::common::Data data);
+  void onAudioInputDataReady(const aasdk::common::Data& data);
   void readAudioInput();
 
   boost::asio::io_service::strand strand_;

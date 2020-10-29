@@ -17,14 +17,15 @@
 */
 
 #include <f1x/openauto/autoapp/Projection/RemoteBluetoothDevice.hpp>
+#include <utility>
 
 namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
 
-RemoteBluetoothDevice::RemoteBluetoothDevice(const std::string& address)
-    : address_(address) {}
+RemoteBluetoothDevice::RemoteBluetoothDevice(std::string  address)
+    : address_(std::move(address)) {}
 
 void RemoteBluetoothDevice::stop() {}
 

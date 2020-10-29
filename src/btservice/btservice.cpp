@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
                        << portNumber;
   }
 
-  qApplication.exec();
+  QApplication::exec();
   androidBluetoothService.unregisterService();
 
   return 0;

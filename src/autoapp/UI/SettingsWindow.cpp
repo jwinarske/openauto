@@ -90,7 +90,7 @@ void SettingsWindow::onSave() {
 
   QRect videoMargins(0, 0, ui_->spinBoxVideoMarginWidth->value(),
                      ui_->spinBoxVideoMarginHeight->value());
-  configuration_->setVideoMargins(std::move(videoMargins));
+  configuration_->setVideoMargins(videoMargins);
 
   configuration_->setTouchscreenEnabled(
       ui_->checkBoxEnableTouchscreen->isChecked());
@@ -277,37 +277,37 @@ void SettingsWindow::setButtonCheckBoxes(bool value) {
 
 void SettingsWindow::saveButtonCheckBoxes() {
   configuration::IConfiguration::ButtonCodes buttonCodes;
-  this->saveButtonCheckBox(ui_->checkBoxPlayButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxPlayButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::PLAY);
-  this->saveButtonCheckBox(ui_->checkBoxPauseButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxPauseButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::PAUSE);
-  this->saveButtonCheckBox(ui_->checkBoxTogglePlayButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxTogglePlayButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::TOGGLE_PLAY);
-  this->saveButtonCheckBox(ui_->checkBoxNextTrackButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxNextTrackButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::NEXT);
-  this->saveButtonCheckBox(ui_->checkBoxPreviousTrackButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxPreviousTrackButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::PREV);
-  this->saveButtonCheckBox(ui_->checkBoxHomeButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxHomeButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::HOME);
-  this->saveButtonCheckBox(ui_->checkBoxPhoneButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxPhoneButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::PHONE);
-  this->saveButtonCheckBox(ui_->checkBoxCallEndButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxCallEndButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::CALL_END);
-  this->saveButtonCheckBox(ui_->checkBoxVoiceCommandButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxVoiceCommandButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::MICROPHONE_1);
-  this->saveButtonCheckBox(ui_->checkBoxLeftButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxLeftButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::LEFT);
-  this->saveButtonCheckBox(ui_->checkBoxRightButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxRightButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::RIGHT);
-  this->saveButtonCheckBox(ui_->checkBoxUpButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxUpButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::UP);
-  this->saveButtonCheckBox(ui_->checkBoxDownButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxDownButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::DOWN);
-  this->saveButtonCheckBox(ui_->checkBoxScrollWheelButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxScrollWheelButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::SCROLL_WHEEL);
-  this->saveButtonCheckBox(ui_->checkBoxBackButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxBackButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::BACK);
-  this->saveButtonCheckBox(ui_->checkBoxEnterButton, buttonCodes,
+  saveButtonCheckBox(ui_->checkBoxEnterButton, buttonCodes,
                            aasdk::proto::enums::ButtonCode::ENTER);
   configuration_->setButtonCodes(buttonCodes);
 }

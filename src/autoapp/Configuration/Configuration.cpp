@@ -24,54 +24,37 @@ namespace openauto {
 namespace autoapp {
 namespace configuration {
 
-const std::string Configuration::cConfigFileName = "openauto.ini";
-
-const std::string Configuration::cGeneralShowClockKey = "General.ShowClock";
-const std::string Configuration::cGeneralHandednessOfTrafficTypeKey =
-    "General.HandednessOfTrafficType";
-
-const std::string Configuration::cVideoFPSKey = "Video.FPS";
-const std::string Configuration::cVideoResolutionKey = "Video.Resolution";
-const std::string Configuration::cVideoScreenDPIKey = "Video.ScreenDPI";
-const std::string Configuration::cVideoOMXLayerIndexKey = "Video.OMXLayerIndex";
-const std::string Configuration::cVideoMarginWidth = "Video.MarginWidth";
-const std::string Configuration::cVideoMarginHeight = "Video.MarginHeight";
-
-const std::string Configuration::cAudioMusicAudioChannelEnabled =
-    "Audio.MusicAudioChannelEnabled";
-const std::string Configuration::cAudioSpeechAudioChannelEnabled =
-    "Audio.SpeechAudioChannelEnabled";
-const std::string Configuration::cAudioOutputBackendType =
-    "Audio.OutputBackendType";
-
-const std::string Configuration::cBluetoothAdapterTypeKey =
-    "Bluetooth.AdapterType";
-const std::string Configuration::cBluetoothRemoteAdapterAddressKey =
-    "Bluetooth.RemoteAdapterAddress";
-
-const std::string Configuration::cInputEnableTouchscreenKey =
-    "Input.EnableTouchscreen";
-const std::string Configuration::cInputPlayButtonKey = "Input.PlayButton";
-const std::string Configuration::cInputPauseButtonKey = "Input.PauseButton";
-const std::string Configuration::cInputTogglePlayButtonKey =
-    "Input.TogglePlayButton";
-const std::string Configuration::cInputNextTrackButtonKey =
-    "Input.NextTrackButton";
-const std::string Configuration::cInputPreviousTrackButtonKey =
-    "Input.PreviousTrackButton";
-const std::string Configuration::cInputHomeButtonKey = "Input.HomeButton";
-const std::string Configuration::cInputPhoneButtonKey = "Input.PhoneButton";
-const std::string Configuration::cInputCallEndButtonKey = "Input.CallEndButton";
-const std::string Configuration::cInputVoiceCommandButtonKey =
-    "Input.VoiceCommandButton";
-const std::string Configuration::cInputLeftButtonKey = "Input.LeftButton";
-const std::string Configuration::cInputRightButtonKey = "Input.RightButton";
-const std::string Configuration::cInputUpButtonKey = "Input.UpButton";
-const std::string Configuration::cInputDownButtonKey = "Input.DownButton";
-const std::string Configuration::cInputScrollWheelButtonKey =
-    "Input.ScrollWheelButton";
-const std::string Configuration::cInputBackButtonKey = "Input.BackButton";
-const std::string Configuration::cInputEnterButtonKey = "Input.EnterButton";
+constexpr char Configuration::cConfigFileName[];
+constexpr char Configuration::cGeneralShowClockKey[];
+constexpr char Configuration::cGeneralHandednessOfTrafficTypeKey[];
+constexpr char Configuration::cVideoFPSKey[];
+constexpr char Configuration::cVideoResolutionKey[];
+constexpr char Configuration::cVideoScreenDPIKey[];
+constexpr char Configuration::cVideoOMXLayerIndexKey[];
+constexpr char Configuration::cVideoMarginWidth[];
+constexpr char Configuration::cVideoMarginHeight[];
+constexpr char Configuration::cAudioMusicAudioChannelEnabled[];
+constexpr char Configuration::cAudioSpeechAudioChannelEnabled[];
+constexpr char Configuration::cAudioOutputBackendType[];
+constexpr char Configuration::cBluetoothAdapterTypeKey[];
+constexpr char Configuration::cBluetoothRemoteAdapterAddressKey[];
+constexpr char Configuration::cInputEnableTouchscreenKey[];
+constexpr char Configuration::cInputPlayButtonKey[];
+constexpr char Configuration::cInputPauseButtonKey[];
+constexpr char Configuration::cInputTogglePlayButtonKey[];
+constexpr char Configuration::cInputNextTrackButtonKey[];
+constexpr char Configuration::cInputPreviousTrackButtonKey[];
+constexpr char Configuration::cInputHomeButtonKey[];
+constexpr char Configuration::cInputPhoneButtonKey[];
+constexpr char Configuration::cInputCallEndButtonKey[];
+constexpr char Configuration::cInputVoiceCommandButtonKey[];
+constexpr char Configuration::cInputLeftButtonKey[];
+constexpr char Configuration::cInputRightButtonKey[];
+constexpr char Configuration::cInputUpButtonKey[];
+constexpr char Configuration::cInputDownButtonKey[];
+constexpr char Configuration::cInputScrollWheelButtonKey[];
+constexpr char Configuration::cInputBackButtonKey[];
+constexpr char Configuration::cInputEnterButtonKey[];
 
 Configuration::Configuration() {
   this->load();
