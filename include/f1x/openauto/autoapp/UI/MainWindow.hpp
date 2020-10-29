@@ -18,41 +18,35 @@
 
 #pragma once
 
-#include <memory>
 #include <QMainWindow>
+#include <memory>
 
-namespace Ui
-{
+namespace Ui {
 class MainWindow;
 }
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace ui
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace ui {
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() override;
+class MainWindow : public QMainWindow {
+  Q_OBJECT
+ public:
+  explicit MainWindow(QWidget* parent = nullptr);
+  ~MainWindow() override;
 
-signals:
-    void exit();
-    void openSettings();
-    void toggleCursor();
-    void openConnectDialog();
+ signals:
+  void exit();
+  void openSettings();
+  void toggleCursor();
+  void openConnectDialog();
 
-private:
-    Ui::MainWindow* ui_;
+ private:
+  Ui::MainWindow* ui_;
 };
 
-}
-}
-}
-}
+}  // namespace ui
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

@@ -20,217 +20,207 @@
 #include <f1x/openauto/autoapp/Projection/IInputDeviceEventHandler.hpp>
 #include <f1x/openauto/autoapp/Projection/InputDevice.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-InputDevice::InputDevice(QObject& parent, configuration::IConfiguration::Pointer configuration, const QRect& touchscreenGeometry, const QRect& displayGeometry)
-    : parent_(parent)
-    , configuration_(std::move(configuration))
-    , touchscreenGeometry_(touchscreenGeometry)
-    , displayGeometry_(displayGeometry)
-    , eventHandler_(nullptr)
-{
-    this->moveToThread(parent.thread());
+InputDevice::InputDevice(QObject& parent,
+                         configuration::IConfiguration::Pointer configuration,
+                         const QRect& touchscreenGeometry,
+                         const QRect& displayGeometry)
+    : parent_(parent),
+      configuration_(std::move(configuration)),
+      touchscreenGeometry_(touchscreenGeometry),
+      displayGeometry_(displayGeometry),
+      eventHandler_(nullptr) {
+  this->moveToThread(parent.thread());
 }
 
-void InputDevice::start(IInputDeviceEventHandler& eventHandler)
-{
-    std::lock_guard<decltype(mutex_)> lock(mutex_);
+void InputDevice::start(IInputDeviceEventHandler& eventHandler) {
+  std::lock_guard<decltype(mutex_)> lock(mutex_);
 
-    OPENAUTO_LOG(info) << "[InputDevice] start.";
-    eventHandler_ = &eventHandler;
-    parent_.installEventFilter(this);
+  OPENAUTO_LOG(info) << "[InputDevice] start.";
+  eventHandler_ = &eventHandler;
+  parent_.installEventFilter(this);
 }
 
-void InputDevice::stop()
-{
-    std::lock_guard<decltype(mutex_)> lock(mutex_);
+void InputDevice::stop() {
+  std::lock_guard<decltype(mutex_)> lock(mutex_);
 
-    OPENAUTO_LOG(info) << "[InputDevice] stop.";
-    parent_.removeEventFilter(this);
-    eventHandler_ = nullptr;
+  OPENAUTO_LOG(info) << "[InputDevice] stop.";
+  parent_.removeEventFilter(this);
+  eventHandler_ = nullptr;
 }
 
-bool InputDevice::eventFilter(QObject* obj, QEvent* event)
-{
-    std::lock_guard<decltype(mutex_)> lock(mutex_);
+bool InputDevice::eventFilter(QObject* obj, QEvent* event) {
+  std::lock_guard<decltype(mutex_)> lock(mutex_);
 
-    if(eventHandler_ != nullptr)
-    {
-        if(event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease)
-        {
-            QKeyEvent* key = static_cast<QKeyEvent*>(event);
-            if(!key->isAutoRepeat())
-            {
-                return this->handleKeyEvent(event, key);
-            }
-        }
-        else if(event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease || event->type() == QEvent::MouseMove)
-        {
-            return this->handleTouchEvent(event);
-        }
+  if (eventHandler_ != nullptr) {
+    if (event->type() == QEvent::KeyPress ||
+        event->type() == QEvent::KeyRelease) {
+      QKeyEvent* key = static_cast<QKeyEvent*>(event);
+      if (!key->isAutoRepeat()) {
+        return this->handleKeyEvent(event, key);
+      }
+    } else if (event->type() == QEvent::MouseButtonPress ||
+               event->type() == QEvent::MouseButtonRelease ||
+               event->type() == QEvent::MouseMove) {
+      return this->handleTouchEvent(event);
     }
+  }
 
-    return QObject::eventFilter(obj, event);
+  return QObject::eventFilter(obj, event);
 }
 
-bool InputDevice::handleKeyEvent(QEvent* event, QKeyEvent* key)
-{
-    auto eventType = event->type() == QEvent::KeyPress ? ButtonEventType::PRESS : ButtonEventType::RELEASE;
-    aasdk::proto::enums::ButtonCode::Enum buttonCode;
-    WheelDirection wheelDirection = WheelDirection::NONE;
+bool InputDevice::handleKeyEvent(QEvent* event, QKeyEvent* key) {
+  auto eventType = event->type() == QEvent::KeyPress ? ButtonEventType::PRESS
+                                                     : ButtonEventType::RELEASE;
+  aasdk::proto::enums::ButtonCode::Enum buttonCode;
+  WheelDirection wheelDirection = WheelDirection::NONE;
 
-    switch(key->key())
-    {
+  switch (key->key()) {
     case Qt::Key_Return:
     case Qt::Key_Enter:
-        buttonCode = aasdk::proto::enums::ButtonCode::ENTER;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::ENTER;
+      break;
 
     case Qt::Key_Left:
-        buttonCode = aasdk::proto::enums::ButtonCode::LEFT;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::LEFT;
+      break;
 
     case Qt::Key_Right:
-        buttonCode = aasdk::proto::enums::ButtonCode::RIGHT;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::RIGHT;
+      break;
 
     case Qt::Key_Up:
-        buttonCode = aasdk::proto::enums::ButtonCode::UP;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::UP;
+      break;
 
     case Qt::Key_Down:
-        buttonCode = aasdk::proto::enums::ButtonCode::DOWN;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::DOWN;
+      break;
 
     case Qt::Key_Escape:
-        buttonCode = aasdk::proto::enums::ButtonCode::BACK;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::BACK;
+      break;
 
     case Qt::Key_H:
-        buttonCode = aasdk::proto::enums::ButtonCode::HOME;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::HOME;
+      break;
 
     case Qt::Key_P:
-        buttonCode = aasdk::proto::enums::ButtonCode::PHONE;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::PHONE;
+      break;
 
     case Qt::Key_O:
-        buttonCode = aasdk::proto::enums::ButtonCode::CALL_END;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::CALL_END;
+      break;
 
     case Qt::Key_X:
-        buttonCode = aasdk::proto::enums::ButtonCode::PLAY;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::PLAY;
+      break;
 
     case Qt::Key_C:
-        buttonCode = aasdk::proto::enums::ButtonCode::PAUSE;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::PAUSE;
+      break;
 
     case Qt::Key_MediaPrevious:
     case Qt::Key_V:
-        buttonCode = aasdk::proto::enums::ButtonCode::PREV;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::PREV;
+      break;
 
     case Qt::Key_MediaPlay:
     case Qt::Key_B:
-        buttonCode = aasdk::proto::enums::ButtonCode::TOGGLE_PLAY;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::TOGGLE_PLAY;
+      break;
 
     case Qt::Key_MediaNext:
     case Qt::Key_N:
-        buttonCode = aasdk::proto::enums::ButtonCode::NEXT;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::NEXT;
+      break;
 
     case Qt::Key_M:
-        buttonCode = aasdk::proto::enums::ButtonCode::MICROPHONE_1;
-        break;
+      buttonCode = aasdk::proto::enums::ButtonCode::MICROPHONE_1;
+      break;
 
     case Qt::Key_1:
-        wheelDirection = WheelDirection::LEFT;
-        eventType = ButtonEventType::NONE;
-        buttonCode = aasdk::proto::enums::ButtonCode::SCROLL_WHEEL;
-        break;
+      wheelDirection = WheelDirection::LEFT;
+      eventType = ButtonEventType::NONE;
+      buttonCode = aasdk::proto::enums::ButtonCode::SCROLL_WHEEL;
+      break;
 
     case Qt::Key_2:
-        wheelDirection = WheelDirection::RIGHT;
-        eventType = ButtonEventType::NONE;
-        buttonCode = aasdk::proto::enums::ButtonCode::SCROLL_WHEEL;
-        break;
+      wheelDirection = WheelDirection::RIGHT;
+      eventType = ButtonEventType::NONE;
+      buttonCode = aasdk::proto::enums::ButtonCode::SCROLL_WHEEL;
+      break;
 
     default:
-        return true;
-    }
+      return true;
+  }
 
-    const auto& buttonCodes = this->getSupportedButtonCodes();
-    if(std::find(buttonCodes.begin(), buttonCodes.end(), buttonCode) != buttonCodes.end())
-    {
-        if(buttonCode != aasdk::proto::enums::ButtonCode::SCROLL_WHEEL || event->type() == QEvent::KeyRelease)
-        {
-            eventHandler_->onButtonEvent({eventType, wheelDirection, buttonCode});
-        }
+  const auto& buttonCodes = this->getSupportedButtonCodes();
+  if (std::find(buttonCodes.begin(), buttonCodes.end(), buttonCode) !=
+      buttonCodes.end()) {
+    if (buttonCode != aasdk::proto::enums::ButtonCode::SCROLL_WHEEL ||
+        event->type() == QEvent::KeyRelease) {
+      eventHandler_->onButtonEvent({eventType, wheelDirection, buttonCode});
     }
+  }
 
-    return true;
+  return true;
 }
 
-bool InputDevice::handleTouchEvent(QEvent* event)
-{
-    if(!configuration_->getTouchscreenEnabled())
-    {
-        return true;
-    }
+bool InputDevice::handleTouchEvent(QEvent* event) {
+  if (!configuration_->getTouchscreenEnabled()) {
+    return true;
+  }
 
-    aasdk::proto::enums::TouchAction::Enum type;
+  aasdk::proto::enums::TouchAction::Enum type;
 
-    switch(event->type())
-    {
+  switch (event->type()) {
     case QEvent::MouseButtonPress:
-        type = aasdk::proto::enums::TouchAction::PRESS;
-        break;
+      type = aasdk::proto::enums::TouchAction::PRESS;
+      break;
     case QEvent::MouseButtonRelease:
-        type = aasdk::proto::enums::TouchAction::RELEASE;
-        break;
+      type = aasdk::proto::enums::TouchAction::RELEASE;
+      break;
     case QEvent::MouseMove:
-        type = aasdk::proto::enums::TouchAction::DRAG;
-        break;
+      type = aasdk::proto::enums::TouchAction::DRAG;
+      break;
     default:
-        return true;
-    };
+      return true;
+  };
 
-    QMouseEvent* mouse = static_cast<QMouseEvent*>(event);
-    if(event->type() == QEvent::MouseButtonRelease || mouse->buttons().testFlag(Qt::LeftButton))
-    {
-        const uint32_t x = (static_cast<float>(mouse->pos().x()) / touchscreenGeometry_.width()) * displayGeometry_.width();
-        const uint32_t y = (static_cast<float>(mouse->pos().y()) / touchscreenGeometry_.height()) * displayGeometry_.height();
-        eventHandler_->onTouchEvent({type, x, y, 0});
-    }
+  QMouseEvent* mouse = static_cast<QMouseEvent*>(event);
+  if (event->type() == QEvent::MouseButtonRelease ||
+      mouse->buttons().testFlag(Qt::LeftButton)) {
+    const uint32_t x =
+        (static_cast<float>(mouse->pos().x()) / touchscreenGeometry_.width()) *
+        displayGeometry_.width();
+    const uint32_t y =
+        (static_cast<float>(mouse->pos().y()) / touchscreenGeometry_.height()) *
+        displayGeometry_.height();
+    eventHandler_->onTouchEvent({type, x, y, 0});
+  }
 
-    return true;
-}
-
-bool InputDevice::hasTouchscreen() const
-{
-    return configuration_->getTouchscreenEnabled();
-}
-
-QRect InputDevice::getTouchscreenGeometry() const
-{
-    return touchscreenGeometry_;
+  return true;
 }
 
-IInputDevice::ButtonCodes InputDevice::getSupportedButtonCodes() const
-{
-    return configuration_->getButtonCodes();
+bool InputDevice::hasTouchscreen() const {
+  return configuration_->getTouchscreenEnabled();
 }
 
+QRect InputDevice::getTouchscreenGeometry() const {
+  return touchscreenGeometry_;
 }
+
+IInputDevice::ButtonCodes InputDevice::getSupportedButtonCodes() const {
+  return configuration_->getButtonCodes();
 }
-}
-}
+
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

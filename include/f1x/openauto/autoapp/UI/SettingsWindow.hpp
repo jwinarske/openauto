@@ -18,52 +18,50 @@
 
 #pragma once
 
-#include <memory>
 #include <QWidget>
 #include <f1x/openauto/autoapp/Configuration/IConfiguration.hpp>
+#include <memory>
 
 class QCheckBox;
 
-namespace Ui
-{
+namespace Ui {
 class SettingsWindow;
 }
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace ui
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace ui {
 
-class SettingsWindow : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit SettingsWindow(configuration::IConfiguration::Pointer configuration, QWidget *parent = nullptr);
-    ~SettingsWindow() override;
+class SettingsWindow : public QWidget {
+  Q_OBJECT
+ public:
+  explicit SettingsWindow(configuration::IConfiguration::Pointer configuration,
+                          QWidget* parent = nullptr);
+  ~SettingsWindow() override;
 
-private slots:
-    void onSave();
-    void onResetToDefaults();
-    void onUpdateScreenDPI(int value);
-    void onShowBindings();
+ private slots:
+  void onSave();
+  void onResetToDefaults();
+  void onUpdateScreenDPI(int value);
+  void onShowBindings();
 
-private:
-    void showEvent(QShowEvent* event);
-    void load();
-    void loadButtonCheckBoxes();
-    void saveButtonCheckBoxes();
-    void saveButtonCheckBox(const QCheckBox* checkBox, configuration::IConfiguration::ButtonCodes& buttonCodes, aasdk::proto::enums::ButtonCode::Enum buttonCode);
-    void setButtonCheckBoxes(bool value);
+ private:
+  void showEvent(QShowEvent* event);
+  void load();
+  void loadButtonCheckBoxes();
+  void saveButtonCheckBoxes();
+  void saveButtonCheckBox(
+      const QCheckBox* checkBox,
+      configuration::IConfiguration::ButtonCodes& buttonCodes,
+      aasdk::proto::enums::ButtonCode::Enum buttonCode);
+  void setButtonCheckBoxes(bool value);
 
-    Ui::SettingsWindow* ui_;
-    configuration::IConfiguration::Pointer configuration_;
+  Ui::SettingsWindow* ui_;
+  configuration::IConfiguration::Pointer configuration_;
 };
 
-}
-}
-}
-}
+}  // namespace ui
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

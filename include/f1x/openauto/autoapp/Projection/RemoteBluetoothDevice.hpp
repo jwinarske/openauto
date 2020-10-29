@@ -20,31 +20,27 @@
 
 #include <f1x/openauto/autoapp/Projection/IBluetoothDevice.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-class RemoteBluetoothDevice: public IBluetoothDevice
-{
-public:
-    RemoteBluetoothDevice(const std::string& address);
+class RemoteBluetoothDevice : public IBluetoothDevice {
+ public:
+  RemoteBluetoothDevice(const std::string& address);
 
-    void stop() override;
-    bool isPaired(const std::string& address) const override;
-    void pair(const std::string& address, PairingPromise::Pointer promise) override;
-    std::string getLocalAddress() const override;
-    bool isAvailable() const override;
+  void stop() override;
+  bool isPaired(const std::string& address) const override;
+  void pair(const std::string& address,
+            PairingPromise::Pointer promise) override;
+  std::string getLocalAddress() const override;
+  bool isAvailable() const override;
 
-private:
-    std::string address_;
+ private:
+  std::string address_;
 };
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

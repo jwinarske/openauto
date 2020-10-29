@@ -21,37 +21,40 @@
 #include <f1x/aasdk/Channel/Sensor/SensorServiceChannel.hpp>
 #include <f1x/openauto/autoapp/Service/IService.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-class SensorService: public aasdk::channel::sensor::ISensorServiceChannelEventHandler, public IService, public std::enable_shared_from_this<SensorService>
-{
-public:
-    SensorService(boost::asio::io_service& ioService, aasdk::messenger::IMessenger::Pointer messenger);
+class SensorService
+    : public aasdk::channel::sensor::ISensorServiceChannelEventHandler,
+      public IService,
+      public std::enable_shared_from_this<SensorService> {
+ public:
+  SensorService(boost::asio::io_service& ioService,
+                aasdk::messenger::IMessenger::Pointer messenger);
 
-    void start() override;
-    void stop() override;
-    void fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse& response) override;
-    void onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest& request) override;
-    void onSensorStartRequest(const aasdk::proto::messages::SensorStartRequestMessage& request) override;
-    void onChannelError(const aasdk::error::Error& e) override;
+  void start() override;
+  void stop() override;
+  void fillFeatures(
+      aasdk::proto::messages::ServiceDiscoveryResponse& response) override;
+  void onChannelOpenRequest(
+      const aasdk::proto::messages::ChannelOpenRequest& request) override;
+  void onSensorStartRequest(
+      const aasdk::proto::messages::SensorStartRequestMessage& request)
+      override;
+  void onChannelError(const aasdk::error::Error& e) override;
 
-private:
-    using std::enable_shared_from_this<SensorService>::shared_from_this;
-    void sendDrivingStatusUnrestricted();
-    void sendNightData();
+ private:
+  using std::enable_shared_from_this<SensorService>::shared_from_this;
+  void sendDrivingStatusUnrestricted();
+  void sendNightData();
 
-    boost::asio::io_service::strand strand_;
-    aasdk::channel::sensor::SensorServiceChannel::Pointer channel_;
+  boost::asio::io_service::strand strand_;
+  aasdk::channel::sensor::SensorServiceChannel::Pointer channel_;
 };
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

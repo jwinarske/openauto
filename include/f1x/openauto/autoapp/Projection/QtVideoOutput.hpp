@@ -20,47 +20,43 @@
 
 #include <QMediaPlayer>
 #include <QVideoWidget>
-#include <f1x/openauto/autoapp/Projection/VideoOutput.hpp>
 #include <f1x/openauto/autoapp/Projection/SequentialBuffer.hpp>
+#include <f1x/openauto/autoapp/Projection/VideoOutput.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-class QtVideoOutput: public QObject, public VideoOutput
-{
-    Q_OBJECT
+class QtVideoOutput : public QObject, public VideoOutput {
+  Q_OBJECT
 
-public:
-    QtVideoOutput(configuration::IConfiguration::Pointer configuration);
-    bool open() override;
-    bool init() override;
-    void write(uint64_t timestamp, const aasdk::common::DataConstBuffer& buffer) override;
-    void stop() override;
+ public:
+  QtVideoOutput(configuration::IConfiguration::Pointer configuration);
+  bool open() override;
+  bool init() override;
+  void write(uint64_t timestamp,
+             const aasdk::common::DataConstBuffer& buffer) override;
+  void stop() override;
 
-signals:
-    void startPlayback();
-    void stopPlayback();
+ signals:
+  void startPlayback();
+  void stopPlayback();
 
-protected slots:
-    void createVideoOutput();
-    void onStartPlayback();
-    void onStopPlayback();
+ protected slots:
+  void createVideoOutput();
+  void onStartPlayback();
+  void onStopPlayback();
 
-private:
-    SequentialBuffer videoBuffer_;
-    std::unique_ptr<QVideoWidget> videoWidget_;
-    std::unique_ptr<QMediaPlayer> mediaPlayer_;
+ private:
+  SequentialBuffer videoBuffer_;
+  std::unique_ptr<QVideoWidget> videoWidget_;
+  std::unique_ptr<QMediaPlayer> mediaPlayer_;
 
-    QtVideoOutput(const QtVideoOutput&) = delete;
+  QtVideoOutput(const QtVideoOutput&) = delete;
 };
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

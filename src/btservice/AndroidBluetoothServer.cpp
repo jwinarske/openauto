@@ -19,38 +19,36 @@
 #include <f1x/openauto/Common/Log.hpp>
 #include <f1x/openauto/btservice/AndroidBluetoothServer.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace btservice
-{
+namespace f1x {
+namespace openauto {
+namespace btservice {
 
 AndroidBluetoothServer::AndroidBluetoothServer()
-    : rfcommServer_(std::make_unique<QBluetoothServer>(QBluetoothServiceInfo::RfcommProtocol, this))
-{
-    connect(rfcommServer_.get(), &QBluetoothServer::newConnection, this, &AndroidBluetoothServer::onClientConnected);
+    : rfcommServer_(std::make_unique<QBluetoothServer>(
+          QBluetoothServiceInfo::RfcommProtocol,
+          this)) {
+  connect(rfcommServer_.get(), &QBluetoothServer::newConnection, this,
+          &AndroidBluetoothServer::onClientConnected);
 }
 
-bool AndroidBluetoothServer::start(const QBluetoothAddress& address, uint16_t portNumber)
-{
-    return rfcommServer_->listen(address, portNumber);
+bool AndroidBluetoothServer::start(const QBluetoothAddress& address,
+                                   uint16_t portNumber) {
+  return rfcommServer_->listen(address, portNumber);
 }
 
-void AndroidBluetoothServer::onClientConnected()
-{
-    auto socket = rfcommServer_->nextPendingConnection();
+void AndroidBluetoothServer::onClientConnected() {
+  auto socket = rfcommServer_->nextPendingConnection();
 
-    if(socket != nullptr)
-    {
-        OPENAUTO_LOG(info) << "[AndroidBluetoothServer] rfcomm client connected, peer name: " << socket->peerName().toStdString();
-    }
-    else
-    {
-        OPENAUTO_LOG(error) << "[AndroidBluetoothServer] received null socket during client connection.";
-    }
+  if (socket != nullptr) {
+    OPENAUTO_LOG(info)
+        << "[AndroidBluetoothServer] rfcomm client connected, peer name: "
+        << socket->peerName().toStdString();
+  } else {
+    OPENAUTO_LOG(error) << "[AndroidBluetoothServer] received null socket "
+                           "during client connection.";
+  }
 }
 
-}
-}
-}
+}  // namespace btservice
+}  // namespace openauto
+}  // namespace f1x

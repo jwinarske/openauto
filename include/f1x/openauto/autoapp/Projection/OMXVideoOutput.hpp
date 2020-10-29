@@ -19,54 +19,49 @@
 #ifdef USE_OMX
 #pragma once
 
-extern "C"
-{
+extern "C" {
 #include <ilclient.h>
 }
 
-#include <mutex>
-#include <condition_variable>
-#include <thread>
 #include <boost/circular_buffer.hpp>
+#include <condition_variable>
 #include <f1x/openauto/autoapp/Projection/VideoOutput.hpp>
+#include <mutex>
+#include <thread>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-class OMXVideoOutput: public VideoOutput
-{
-public:
-    OMXVideoOutput(configuration::IConfiguration::Pointer configuration);
+class OMXVideoOutput : public VideoOutput {
+ public:
+  OMXVideoOutput(configuration::IConfiguration::Pointer configuration);
 
-    bool open() override;
-    bool init() override;
-    void write(uint64_t timestamp, const aasdk::common::DataConstBuffer& buffer) override;
-    void stop() override;
+  bool open() override;
+  bool init() override;
+  void write(uint64_t timestamp,
+             const aasdk::common::DataConstBuffer& buffer) override;
+  void stop() override;
 
-private:
-    bool createComponents();
-    bool initClock();
-    bool setupTunnels();
-    bool enablePortBuffers();
-    bool setupDisplayRegion();
+ private:
+  bool createComponents();
+  bool initClock();
+  bool setupTunnels();
+  bool enablePortBuffers();
+  bool setupDisplayRegion();
 
-    std::mutex mutex_;
-    bool isActive_;
-    bool portSettingsChanged_;
-    ILCLIENT_T* client_;
-    COMPONENT_T* components_[5];
-    TUNNEL_T tunnels_[4];
+  std::mutex mutex_;
+  bool isActive_;
+  bool portSettingsChanged_;
+  ILCLIENT_T* client_;
+  COMPONENT_T* components_[5];
+  TUNNEL_T tunnels_[4];
 };
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x
 
 #endif

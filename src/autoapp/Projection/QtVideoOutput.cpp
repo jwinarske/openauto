@@ -17,77 +17,70 @@
 */
 
 #include <QApplication>
-#include <f1x/openauto/autoapp/Projection/QtVideoOutput.hpp>
 #include <f1x/openauto/Common/Log.hpp>
+#include <f1x/openauto/autoapp/Projection/QtVideoOutput.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-QtVideoOutput::QtVideoOutput(configuration::IConfiguration::Pointer configuration)
-    : VideoOutput(std::move(configuration))
-{
-    this->moveToThread(QApplication::instance()->thread());
-    connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
-    connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
+QtVideoOutput::QtVideoOutput(
+    configuration::IConfiguration::Pointer configuration)
+    : VideoOutput(std::move(configuration)) {
+  this->moveToThread(QApplication::instance()->thread());
+  connect(this, &QtVideoOutput::startPlayback, this,
+          &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
+  connect(this, &QtVideoOutput::stopPlayback, this,
+          &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
 
-    QMetaObject::invokeMethod(this, "createVideoOutput", Qt::BlockingQueuedConnection);
+  QMetaObject::invokeMethod(this, "createVideoOutput",
+                            Qt::BlockingQueuedConnection);
 }
 
-void QtVideoOutput::createVideoOutput()
-{
-    OPENAUTO_LOG(debug) << "[QtVideoOutput] create.";
-    videoWidget_ = std::make_unique<QVideoWidget>();
-    mediaPlayer_ = std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback);
+void QtVideoOutput::createVideoOutput() {
+  OPENAUTO_LOG(debug) << "[QtVideoOutput] create.";
+  videoWidget_ = std::make_unique<QVideoWidget>();
+  mediaPlayer_ =
+      std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback);
 }
 
-
-bool QtVideoOutput::open()
-{
-    return videoBuffer_.open(QIODevice::ReadWrite);
+bool QtVideoOutput::open() {
+  return videoBuffer_.open(QIODevice::ReadWrite);
 }
 
-bool QtVideoOutput::init()
-{
-    emit startPlayback();
-    return true;
+bool QtVideoOutput::init() {
+  emit startPlayback();
+  return true;
 }
 
-void QtVideoOutput::stop()
-{
-    emit stopPlayback();
+void QtVideoOutput::stop() {
+  emit stopPlayback();
 }
 
-void QtVideoOutput::write(uint64_t, const aasdk::common::DataConstBuffer& buffer)
-{
-    videoBuffer_.write(reinterpret_cast<const char*>(buffer.cdata), buffer.size);
+void QtVideoOutput::write(uint64_t,
+                          const aasdk::common::DataConstBuffer& buffer) {
+  videoBuffer_.write(reinterpret_cast<const char*>(buffer.cdata), buffer.size);
 }
 
-void QtVideoOutput::onStartPlayback()
-{
-    videoWidget_->setAspectRatioMode(Qt::IgnoreAspectRatio);
-    videoWidget_->setFocus();
-    videoWidget_->setWindowFlags(Qt::WindowStaysOnTopHint);
-    videoWidget_->setFullScreen(false);
-    videoWidget_->show();
+void QtVideoOutput::onStartPlayback() {
+  videoWidget_->setAspectRatioMode(Qt::IgnoreAspectRatio);
+  videoWidget_->setFocus();
+  videoWidget_->setWindowFlags(Qt::WindowStaysOnTopHint);
+  videoWidget_->setFullScreen(false);
+  videoWidget_->show();
 
-    mediaPlayer_->setVideoOutput(videoWidget_.get());
-    mediaPlayer_->setMedia(QMediaContent(), &videoBuffer_);
-    mediaPlayer_->play();
-}
-
-void QtVideoOutput::onStopPlayback()
-{
-    videoWidget_->hide();
-    mediaPlayer_->stop();
+  mediaPlayer_->setVideoOutput(videoWidget_.get());
+  mediaPlayer_->setMedia(QMediaContent(), &videoBuffer_);
+  mediaPlayer_->play();
 }
 
+void QtVideoOutput::onStopPlayback() {
+  videoWidget_->hide();
+  mediaPlayer_->stop();
 }
-}
-}
-}
+
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

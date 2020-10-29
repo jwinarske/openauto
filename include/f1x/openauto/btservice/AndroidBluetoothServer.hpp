@@ -19,33 +19,29 @@
 #pragma once
 
 #include <stdint.h>
-#include <memory>
 #include <QBluetoothServer>
 #include <f1x/openauto/btservice/IAndroidBluetoothServer.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace btservice
-{
+namespace f1x {
+namespace openauto {
+namespace btservice {
 
-class AndroidBluetoothServer: public QObject, public IAndroidBluetoothServer
-{
-    Q_OBJECT
+class AndroidBluetoothServer : public QObject, public IAndroidBluetoothServer {
+  Q_OBJECT
 
-public:
-    AndroidBluetoothServer();
+ public:
+  AndroidBluetoothServer();
 
-    bool start(const QBluetoothAddress& address, uint16_t portNumber) override;
+  bool start(const QBluetoothAddress& address, uint16_t portNumber) override;
 
-private slots:
-    void onClientConnected();
+ private slots:
+  void onClientConnected();
 
-private:
-    std::unique_ptr<QBluetoothServer> rfcommServer_;
+ private:
+  std::unique_ptr<QBluetoothServer> rfcommServer_;
 };
 
-}
-}
-}
+}  // namespace btservice
+}  // namespace openauto
+}  // namespace f1x

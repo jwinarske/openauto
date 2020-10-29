@@ -22,35 +22,38 @@
 #include <f1x/openauto/autoapp/Projection/IBluetoothDevice.hpp>
 #include <f1x/openauto/autoapp/Service/IService.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-class BluetoothService: public aasdk::channel::bluetooth::IBluetoothServiceChannelEventHandler, public IService, public std::enable_shared_from_this<BluetoothService>
-{
-public:
-    BluetoothService(boost::asio::io_service& ioService, aasdk::messenger::IMessenger::Pointer messenger, projection::IBluetoothDevice::Pointer bluetoothDevice);
-    void start() override;
-    void stop() override;
-    void fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse& response) override;
-    void onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest& request) override;
-    void onBluetoothPairingRequest(const aasdk::proto::messages::BluetoothPairingRequest& request) override;
-    void onChannelError(const aasdk::error::Error& e) override;
+class BluetoothService
+    : public aasdk::channel::bluetooth::IBluetoothServiceChannelEventHandler,
+      public IService,
+      public std::enable_shared_from_this<BluetoothService> {
+ public:
+  BluetoothService(boost::asio::io_service& ioService,
+                   aasdk::messenger::IMessenger::Pointer messenger,
+                   projection::IBluetoothDevice::Pointer bluetoothDevice);
+  void start() override;
+  void stop() override;
+  void fillFeatures(
+      aasdk::proto::messages::ServiceDiscoveryResponse& response) override;
+  void onChannelOpenRequest(
+      const aasdk::proto::messages::ChannelOpenRequest& request) override;
+  void onBluetoothPairingRequest(
+      const aasdk::proto::messages::BluetoothPairingRequest& request) override;
+  void onChannelError(const aasdk::error::Error& e) override;
 
-private:
-    using std::enable_shared_from_this<BluetoothService>::shared_from_this;
+ private:
+  using std::enable_shared_from_this<BluetoothService>::shared_from_this;
 
-    boost::asio::io_service::strand strand_;
-    aasdk::channel::bluetooth::BluetoothServiceChannel::Pointer channel_;
-    projection::IBluetoothDevice::Pointer bluetoothDevice_;
+  boost::asio::io_service::strand strand_;
+  aasdk::channel::bluetooth::BluetoothServiceChannel::Pointer channel_;
+  projection::IBluetoothDevice::Pointer bluetoothDevice_;
 };
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

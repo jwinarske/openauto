@@ -18,39 +18,34 @@
 
 #pragma once
 
-#include <memory>
-#include <f1x/aasdk/IO/Promise.hpp>
 #include <f1x/aasdk/Common/Data.hpp>
+#include <f1x/aasdk/IO/Promise.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-class IAudioInput
-{
-public:
-    typedef aasdk::io::Promise<void, void> StartPromise;
-    typedef aasdk::io::Promise<aasdk::common::Data, void> ReadPromise;
-    typedef std::shared_ptr<IAudioInput> Pointer;
+class IAudioInput {
+ public:
+  typedef aasdk::io::Promise<void, void> StartPromise;
+  typedef aasdk::io::Promise<aasdk::common::Data, void> ReadPromise;
+  typedef std::shared_ptr<IAudioInput> Pointer;
 
-    virtual ~IAudioInput() = default;
+  virtual ~IAudioInput() = default;
 
-    virtual bool open() = 0;
-    virtual bool isActive() const = 0;
-    virtual void read(ReadPromise::Pointer promise) = 0;
-    virtual void start(StartPromise::Pointer promise) = 0;
-    virtual void stop() = 0;
-    virtual uint32_t getSampleSize() const = 0;
-    virtual uint32_t getChannelCount() const = 0;
-    virtual uint32_t getSampleRate() const = 0;
+  virtual bool open() = 0;
+  virtual bool isActive() const = 0;
+  virtual void read(ReadPromise::Pointer promise) = 0;
+  virtual void start(StartPromise::Pointer promise) = 0;
+  virtual void stop() = 0;
+  virtual uint32_t getSampleSize() const = 0;
+  virtual uint32_t getChannelCount() const = 0;
+  virtual uint32_t getSampleRate() const = 0;
 };
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x
