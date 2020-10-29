@@ -36,14 +36,14 @@ AudioInputService::AudioInputService(
       session_(0) {}
 
 void AudioInputService::start() {
-  strand_.dispatch([this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
     OPENAUTO_LOG(info) << "[AudioInputService] start.";
     channel_->receive(this->shared_from_this());
   });
 }
 
 void AudioInputService::stop() {
-  strand_.dispatch([this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
     OPENAUTO_LOG(info) << "[AudioInputService] stop.";
     audioInput_->stop();
   });
@@ -187,8 +187,8 @@ void AudioInputService::onAudioInputDataReady(const aasdk::common::Data& data) {
 
   auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
       std::chrono::high_resolution_clock::now().time_since_epoch());
-  channel_->sendAVMediaWithTimestampIndication(
-      timestamp.count(), data, std::move(sendPromise));
+  channel_->sendAVMediaWithTimestampIndication(timestamp.count(), data,
+                                               std::move(sendPromise));
 }
 
 void AudioInputService::readAudioInput() {

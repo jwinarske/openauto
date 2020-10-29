@@ -33,14 +33,14 @@ SensorService::SensorService(boost::asio::io_service& ioService,
           std::move(messenger))) {}
 
 void SensorService::start() {
-  strand_.dispatch([this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
     OPENAUTO_LOG(info) << "[SensorService] start.";
     channel_->receive(this->shared_from_this());
   });
 }
 
 void SensorService::stop() {
-  strand_.dispatch([this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
     OPENAUTO_LOG(info) << "[SensorService] stop.";
   });
 }
@@ -92,14 +92,13 @@ void SensorService::onSensorStartRequest(
 
   if (request.sensor_type() ==
       aasdk::proto::enums::SensorType::DRIVING_STATUS) {
-    promise->then(std::bind(&SensorService::sendDrivingStatusUnrestricted,
-                            this->shared_from_this()),
+    promise->then([capture0 = this->shared_from_this()] { capture0->sendDrivingStatusUnrestricted(); },
                   std::bind(&SensorService::onChannelError,
                             this->shared_from_this(), std::placeholders::_1));
   } else if (request.sensor_type() ==
              aasdk::proto::enums::SensorType::NIGHT_DATA) {
     promise->then(
-        std::bind(&SensorService::sendNightData, this->shared_from_this()),
+        [capture0 = this->shared_from_this()] { capture0->sendNightData(); },
         std::bind(&SensorService::onChannelError, this->shared_from_this(),
                   std::placeholders::_1));
   } else {

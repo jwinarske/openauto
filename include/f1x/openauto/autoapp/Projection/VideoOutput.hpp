@@ -28,7 +28,7 @@ namespace projection {
 
 class VideoOutput : public IVideoOutput {
  public:
-  VideoOutput(configuration::IConfiguration::Pointer configuration);
+  explicit VideoOutput(configuration::IConfiguration::Pointer configuration);
 
   aasdk::proto::enums::VideoFPS::Enum getVideoFPS() const override;
   aasdk::proto::enums::VideoResolution::Enum getVideoResolution()

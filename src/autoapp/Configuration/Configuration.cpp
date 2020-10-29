@@ -56,61 +56,69 @@ constexpr char Configuration::cInputScrollWheelButtonKey[];
 constexpr char Configuration::cInputBackButtonKey[];
 constexpr char Configuration::cInputEnterButtonKey[];
 
-Configuration::Configuration() {
-  this->load();
-}
-
-void Configuration::load() {
+Configuration::Configuration()
+    : handednessOfTrafficType_(HandednessOfTrafficType::LEFT_HAND_DRIVE),
+      showClock_(true),
+      videoFPS_(aasdk::proto::enums::VideoFPS::_60),
+      videoResolution_(aasdk::proto::enums::VideoResolution::_480p),
+      screenDPI_(140),
+      omxLayerIndex_(1),
+      videoMargins_(QRect(0, 0, 0, 0)),
+      enableTouchscreen_(true),
+      bluetoothAdapterType_(BluetoothAdapterType::NONE),
+      musicAudioChannelEnabled_(true),
+      speechAudioChannelEnabled_(true),
+      audioOutputBackendType_(AudioOutputBackendType::RTAUDIO) {
   boost::property_tree::ptree iniConfig;
 
   try {
     boost::property_tree::ini_parser::read_ini(cConfigFileName, iniConfig);
-
-    handednessOfTrafficType_ =
-        static_cast<HandednessOfTrafficType>(iniConfig.get<uint32_t>(
-            cGeneralHandednessOfTrafficTypeKey,
-            static_cast<uint32_t>(HandednessOfTrafficType::LEFT_HAND_DRIVE)));
-    showClock_ = iniConfig.get<bool>(cGeneralShowClockKey, true);
-
-    videoFPS_ = static_cast<aasdk::proto::enums::VideoFPS::Enum>(
-        iniConfig.get<uint32_t>(cVideoFPSKey,
-                                aasdk::proto::enums::VideoFPS::_60));
-
-    videoResolution_ = static_cast<aasdk::proto::enums::VideoResolution::Enum>(
-        iniConfig.get<uint32_t>(cVideoResolutionKey,
-                                aasdk::proto::enums::VideoResolution::_480p));
-    screenDPI_ = iniConfig.get<size_t>(cVideoScreenDPIKey, 140);
-
-    omxLayerIndex_ = iniConfig.get<int32_t>(cVideoOMXLayerIndexKey, 1);
-    videoMargins_ = QRect(0, 0, iniConfig.get<int32_t>(cVideoMarginWidth, 0),
-                          iniConfig.get<int32_t>(cVideoMarginHeight, 0));
-
-    enableTouchscreen_ = iniConfig.get<bool>(cInputEnableTouchscreenKey, true);
-    this->readButtonCodes(iniConfig);
-
-    bluetoothAdapterType_ =
-        static_cast<BluetoothAdapterType>(iniConfig.get<uint32_t>(
-            cBluetoothAdapterTypeKey,
-            static_cast<uint32_t>(BluetoothAdapterType::NONE)));
-
-    bluetoothRemoteAdapterAddress_ =
-        iniConfig.get<std::string>(cBluetoothRemoteAdapterAddressKey, "");
-
-    musicAudioChannelEnabled_ =
-        iniConfig.get<bool>(cAudioMusicAudioChannelEnabled, true);
-    speechAudiochannelEnabled_ =
-        iniConfig.get<bool>(cAudioSpeechAudioChannelEnabled, true);
-    audioOutputBackendType_ =
-        static_cast<AudioOutputBackendType>(iniConfig.get<uint32_t>(
-            cAudioOutputBackendType,
-            static_cast<uint32_t>(AudioOutputBackendType::RTAUDIO)));
   } catch (const boost::property_tree::ini_parser_error& e) {
     OPENAUTO_LOG(warning)
         << "[Configuration] failed to read configuration file: "
         << cConfigFileName << ", error: " << e.what()
         << ". Using default configuration.";
-    this->reset();
+    return;
   }
+
+  handednessOfTrafficType_ =
+      static_cast<HandednessOfTrafficType>(iniConfig.get<uint32_t>(
+          cGeneralHandednessOfTrafficTypeKey,
+          static_cast<uint32_t>(HandednessOfTrafficType::LEFT_HAND_DRIVE)));
+  showClock_ = iniConfig.get<bool>(cGeneralShowClockKey, true);
+
+  videoFPS_ =
+      static_cast<aasdk::proto::enums::VideoFPS::Enum>(iniConfig.get<uint32_t>(
+          cVideoFPSKey, aasdk::proto::enums::VideoFPS::_60));
+
+  videoResolution_ = static_cast<aasdk::proto::enums::VideoResolution::Enum>(
+      iniConfig.get<uint32_t>(cVideoResolutionKey,
+                              aasdk::proto::enums::VideoResolution::_480p));
+  screenDPI_ = iniConfig.get<size_t>(cVideoScreenDPIKey, 140);
+
+  omxLayerIndex_ = iniConfig.get<int32_t>(cVideoOMXLayerIndexKey, 1);
+  videoMargins_ = QRect(0, 0, iniConfig.get<int32_t>(cVideoMarginWidth, 0),
+                        iniConfig.get<int32_t>(cVideoMarginHeight, 0));
+
+  enableTouchscreen_ = iniConfig.get<bool>(cInputEnableTouchscreenKey, true);
+  this->readButtonCodes(iniConfig);
+
+  bluetoothAdapterType_ =
+      static_cast<BluetoothAdapterType>(iniConfig.get<uint32_t>(
+          cBluetoothAdapterTypeKey,
+          static_cast<uint32_t>(BluetoothAdapterType::NONE)));
+
+  bluetoothRemoteAdapterAddress_ =
+      iniConfig.get<std::string>(cBluetoothRemoteAdapterAddressKey, "");
+
+  musicAudioChannelEnabled_ =
+      iniConfig.get<bool>(cAudioMusicAudioChannelEnabled, true);
+  speechAudioChannelEnabled_ =
+      iniConfig.get<bool>(cAudioSpeechAudioChannelEnabled, true);
+  audioOutputBackendType_ =
+      static_cast<AudioOutputBackendType>(iniConfig.get<uint32_t>(
+          cAudioOutputBackendType,
+          static_cast<uint32_t>(AudioOutputBackendType::RTAUDIO)));
 }
 
 void Configuration::reset() {
@@ -126,7 +134,7 @@ void Configuration::reset() {
   bluetoothAdapterType_ = BluetoothAdapterType::NONE;
   bluetoothRemoteAdapterAddress_ = "";
   musicAudioChannelEnabled_ = true;
-  speechAudiochannelEnabled_ = true;
+  speechAudioChannelEnabled_ = true;
   audioOutputBackendType_ = AudioOutputBackendType::RTAUDIO;
 }
 
@@ -155,7 +163,7 @@ void Configuration::save() {
   iniConfig.put<bool>(cAudioMusicAudioChannelEnabled,
                       musicAudioChannelEnabled_);
   iniConfig.put<bool>(cAudioSpeechAudioChannelEnabled,
-                      speechAudiochannelEnabled_);
+                      speechAudioChannelEnabled_);
   iniConfig.put<uint32_t>(cAudioOutputBackendType,
                           static_cast<uint32_t>(audioOutputBackendType_));
   boost::property_tree::ini_parser::write_ini(cConfigFileName, iniConfig);
@@ -260,11 +268,11 @@ void Configuration::setMusicAudioChannelEnabled(bool value) {
 }
 
 bool Configuration::speechAudioChannelEnabled() const {
-  return speechAudiochannelEnabled_;
+  return speechAudioChannelEnabled_;
 }
 
 void Configuration::setSpeechAudioChannelEnabled(bool value) {
-  speechAudiochannelEnabled_ = value;
+  speechAudioChannelEnabled_ = value;
 }
 
 AudioOutputBackendType Configuration::getAudioOutputBackendType() const {

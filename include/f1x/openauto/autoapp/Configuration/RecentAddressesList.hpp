@@ -28,7 +28,7 @@ namespace configuration {
 
 class RecentAddressesList : public IRecentAddressesList {
  public:
-  RecentAddressesList(size_t maxListSize);
+  explicit RecentAddressesList(size_t maxListSize);
 
   void read() override;
   void insertAddress(const std::string& address) override;
@@ -42,7 +42,7 @@ class RecentAddressesList : public IRecentAddressesList {
   RecentAddresses list_;
 
   static constexpr char cConfigFileName[] = "openauto_wifi_recent.ini";
-  static constexpr char cRecentEntiresCount[] = "Recent.EntiresCount";
+  static constexpr char cRecentEntriesCount[] = "Recent.EntriesCount";
   static constexpr char cRecentEntryPrefix[] = "Recent.Entry_";
 };
 

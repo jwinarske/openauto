@@ -35,14 +35,14 @@ InputService::InputService(boost::asio::io_service& ioService,
       inputDevice_(std::move(inputDevice)) {}
 
 void InputService::start() {
-  strand_.dispatch([this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
     OPENAUTO_LOG(info) << "[InputService] start.";
     channel_->receive(this->shared_from_this());
   });
 }
 
 void InputService::stop() {
-  strand_.dispatch([this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
     OPENAUTO_LOG(info) << "[InputService] stop.";
     inputDevice_->stop();
   });
@@ -136,9 +136,8 @@ void InputService::onButtonEvent(const projection::ButtonEvent& event) {
   auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
       std::chrono::high_resolution_clock::now().time_since_epoch());
 
-  strand_.dispatch([this, self = this->shared_from_this(),
-                    event = event,
-                    timestamp = timestamp]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this(),
+                                  event = event, timestamp = timestamp]() {
     aasdk::proto::messages::InputEventIndication inputEventIndication;
     inputEventIndication.set_timestamp(timestamp.count());
 
@@ -171,9 +170,8 @@ void InputService::onTouchEvent(const projection::TouchEvent& event) {
   auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
       std::chrono::high_resolution_clock::now().time_since_epoch());
 
-  strand_.dispatch([this, self = this->shared_from_this(),
-                    event = event,
-                    timestamp = timestamp]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this(),
+                                  event = event, timestamp = timestamp]() {
     aasdk::proto::messages::InputEventIndication inputEventIndication;
     inputEventIndication.set_timestamp(timestamp.count());
 

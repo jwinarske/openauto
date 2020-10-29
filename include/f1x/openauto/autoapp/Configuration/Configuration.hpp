@@ -30,7 +30,6 @@ class Configuration : public IConfiguration {
  public:
   Configuration();
 
-  void load() override;
   void reset() override;
   void save() override;
 
@@ -88,7 +87,7 @@ class Configuration : public IConfiguration {
   BluetoothAdapterType bluetoothAdapterType_;
   std::string bluetoothRemoteAdapterAddress_;
   bool musicAudioChannelEnabled_;
-  bool speechAudiochannelEnabled_;
+  bool speechAudioChannelEnabled_;
   AudioOutputBackendType audioOutputBackendType_;
 
   static constexpr char cConfigFileName[] = "openauto.ini";

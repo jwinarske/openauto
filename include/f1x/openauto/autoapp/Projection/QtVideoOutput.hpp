@@ -32,12 +32,14 @@ class QtVideoOutput : public QObject, public VideoOutput {
   Q_OBJECT
 
  public:
-  QtVideoOutput(configuration::IConfiguration::Pointer configuration);
+  explicit QtVideoOutput(configuration::IConfiguration::Pointer configuration);
   bool open() override;
   bool init() override;
   void write(uint64_t timestamp,
              const aasdk::common::DataConstBuffer& buffer) override;
   void stop() override;
+
+  QtVideoOutput(const QtVideoOutput&) = delete;
 
  signals:
   void startPlayback();
@@ -52,8 +54,6 @@ class QtVideoOutput : public QObject, public VideoOutput {
   SequentialBuffer videoBuffer_;
   std::unique_ptr<QVideoWidget> videoWidget_;
   std::unique_ptr<QMediaPlayer> mediaPlayer_;
-
-  QtVideoOutput(const QtVideoOutput&) = delete;
 };
 
 }  // namespace projection

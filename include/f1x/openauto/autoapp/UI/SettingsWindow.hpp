@@ -47,7 +47,7 @@ class SettingsWindow : public QWidget {
   static void onShowBindings();
 
  private:
-  void showEvent(QShowEvent* event);
+  void showEvent(QShowEvent* event) override;
   void load();
   void loadButtonCheckBoxes();
   void saveButtonCheckBoxes();

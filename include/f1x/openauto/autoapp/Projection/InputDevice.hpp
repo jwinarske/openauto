@@ -44,6 +44,8 @@ class InputDevice : public QObject, public IInputDevice {
   bool hasTouchscreen() const override;
   QRect getTouchscreenGeometry() const override;
 
+  InputDevice(const InputDevice&) = delete;
+
  private:
   void setVideoGeometry();
   bool handleKeyEvent(QEvent* event, QKeyEvent* key);
@@ -56,8 +58,6 @@ class InputDevice : public QObject, public IInputDevice {
   QRect displayGeometry_;
   IInputDeviceEventHandler* eventHandler_;
   std::mutex mutex_;
-
-  InputDevice(const InputDevice&) = delete;
 };
 
 }  // namespace projection

@@ -27,7 +27,7 @@ namespace btservice {
 
 class AndroidBluetoothService : public IAndroidBluetoothService {
  public:
-  AndroidBluetoothService(uint16_t portNumber);
+  explicit AndroidBluetoothService(uint16_t portNumber);
 
   bool registerService(const QBluetoothAddress& bluetoothAddress) override;
   bool unregisterService() override;

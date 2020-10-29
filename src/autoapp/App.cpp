@@ -44,15 +44,15 @@ App::App(boost::asio::io_service& ioService,
       isStopped_(false) {}
 
 void App::waitForUSBDevice() {
-  strand_.dispatch([this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
     this->waitForDevice();
     this->enumerateDevices();
   });
 }
 
 void App::start(aasdk::tcp::ITCPEndpoint::SocketPointer socket) {
-  strand_.dispatch([this, self = this->shared_from_this(),
-                    socket = std::move(socket)]() mutable {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this(),
+                                  socket = std::move(socket)]() mutable {
     if (androidAutoEntity_ != nullptr) {
       tcpWrapper_.close(*socket);
       OPENAUTO_LOG(warning) << "[App] android auto entity is still running.";
@@ -79,7 +79,7 @@ void App::start(aasdk::tcp::ITCPEndpoint::SocketPointer socket) {
 }
 
 void App::stop() {
-  strand_.dispatch([this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
     isStopped_ = true;
     connectedAccessoriesEnumerator_->cancel();
     usbHub_->cancel();
@@ -142,7 +142,7 @@ void App::waitForDevice() {
 }
 
 void App::onAndroidAutoQuit() {
-  strand_.dispatch([this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
     OPENAUTO_LOG(info) << "[App] quit.";
 
     androidAutoEntity_->stop();

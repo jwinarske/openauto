@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 #include <QBluetoothServer>
 #include <f1x/openauto/btservice/IAndroidBluetoothServer.hpp>
 #include <memory>

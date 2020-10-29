@@ -39,7 +39,6 @@ class IConfiguration {
 
   virtual ~IConfiguration() = default;
 
-  virtual void load() = 0;
   virtual void reset() = 0;
   virtual void save() = 0;
 

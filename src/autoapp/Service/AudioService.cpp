@@ -34,7 +34,7 @@ AudioService::AudioService(
       session_(-1) {}
 
 void AudioService::start() {
-  strand_.dispatch([this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
     OPENAUTO_LOG(info) << "[AudioService] start, channel: "
                        << aasdk::messenger::channelIdToString(
                               channel_->getId());
@@ -43,7 +43,7 @@ void AudioService::start() {
 }
 
 void AudioService::stop() {
-  strand_.dispatch([this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
     OPENAUTO_LOG(info) << "[AudioService] stop, channel: "
                        << aasdk::messenger::channelIdToString(
                               channel_->getId());
