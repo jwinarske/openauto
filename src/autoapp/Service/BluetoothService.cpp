@@ -54,7 +54,7 @@ void BluetoothService::fillFeatures(
   OPENAUTO_LOG(info) << "[BluetoothService] fill features";
 
   if (bluetoothDevice_->isAvailable()) {
-    OPENAUTO_LOG(info) << "[BluetoothService] sending local adapter adress: "
+    OPENAUTO_LOG(info) << "[BluetoothService] sending local adapter address: "
                        << bluetoothDevice_->getLocalAddress();
 
     auto* channelDescriptor = response.add_channels();
@@ -76,9 +76,7 @@ void BluetoothService::onChannelOpenRequest(
   response.set_status(status);
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
-  promise->then([]() {},
-                std::bind(&BluetoothService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+  promise->then([]() {}, [&](const aasdk::error::Error& e){ onChannelError(e); });
   channel_->sendChannelOpenResponse(response, std::move(promise));
 
   channel_->receive(this->shared_from_this());
@@ -98,9 +96,7 @@ void BluetoothService::onBluetoothPairingRequest(
                           : aasdk::proto::enums::BluetoothPairingStatus::FAIL);
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
-  promise->then([]() {},
-                std::bind(&BluetoothService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+  promise->then([]() {}, [&](const aasdk::error::Error& e){ onChannelError(e); });
   channel_->sendBluetoothPairingResponse(response, std::move(promise));
 
   channel_->receive(this->shared_from_this());

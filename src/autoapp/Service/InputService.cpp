@@ -85,8 +85,7 @@ void InputService::onChannelOpenRequest(
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
-                std::bind(&InputService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+                [&](const aasdk::error::Error& e) { onChannelError(e); });
   channel_->sendChannelOpenResponse(response, std::move(promise));
 
   channel_->receive(this->shared_from_this());
@@ -122,8 +121,7 @@ void InputService::onBindingRequest(
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
-                std::bind(&InputService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+                [&](const aasdk::error::Error& e) { onChannelError(e); });
   channel_->sendBindingResponse(response, std::move(promise));
   channel_->receive(this->shared_from_this());
 }
@@ -159,8 +157,7 @@ void InputService::onButtonEvent(const projection::ButtonEvent& event) {
 
     auto promise = aasdk::channel::SendPromise::defer(strand_);
     promise->then([]() {},
-                  std::bind(&InputService::onChannelError,
-                            this->shared_from_this(), std::placeholders::_1));
+                  [&](const aasdk::error::Error& e) { onChannelError(e); });
     channel_->sendInputEventIndication(inputEventIndication,
                                        std::move(promise));
   });
@@ -184,8 +181,7 @@ void InputService::onTouchEvent(const projection::TouchEvent& event) {
 
     auto promise = aasdk::channel::SendPromise::defer(strand_);
     promise->then([]() {},
-                  std::bind(&InputService::onChannelError,
-                            this->shared_from_this(), std::placeholders::_1));
+                  [&](const aasdk::error::Error& e) { onChannelError(e); });
     channel_->sendInputEventIndication(inputEventIndication,
                                        std::move(promise));
   });

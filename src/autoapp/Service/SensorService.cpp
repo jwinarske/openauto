@@ -40,7 +40,7 @@ void SensorService::start() {
 }
 
 void SensorService::stop() {
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
+  boost::asio::dispatch(strand_, [self = this->shared_from_this()]() {
     OPENAUTO_LOG(info) << "[SensorService] stop.";
   });
 }
@@ -73,8 +73,7 @@ void SensorService::onChannelOpenRequest(
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
-                std::bind(&SensorService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+                [&](const aasdk::error::Error& e) { onChannelError(e); });
   channel_->sendChannelOpenResponse(response, std::move(promise));
 
   channel_->receive(this->shared_from_this());
@@ -92,19 +91,19 @@ void SensorService::onSensorStartRequest(
 
   if (request.sensor_type() ==
       aasdk::proto::enums::SensorType::DRIVING_STATUS) {
-    promise->then([capture0 = this->shared_from_this()] { capture0->sendDrivingStatusUnrestricted(); },
-                  std::bind(&SensorService::onChannelError,
-                            this->shared_from_this(), std::placeholders::_1));
+    promise->then(
+        [capture0 = this->shared_from_this()] {
+          capture0->sendDrivingStatusUnrestricted();
+        },
+        [&](const aasdk::error::Error& e) { onChannelError(e); });
   } else if (request.sensor_type() ==
              aasdk::proto::enums::SensorType::NIGHT_DATA) {
     promise->then(
         [capture0 = this->shared_from_this()] { capture0->sendNightData(); },
-        std::bind(&SensorService::onChannelError, this->shared_from_this(),
-                  std::placeholders::_1));
+        [&](const aasdk::error::Error& e) { onChannelError(e); });
   } else {
     promise->then([]() {},
-                  std::bind(&SensorService::onChannelError,
-                            this->shared_from_this(), std::placeholders::_1));
+                  [&](const aasdk::error::Error& e) { onChannelError(e); });
   }
 
   channel_->sendSensorStartResponse(response, std::move(promise));
@@ -118,8 +117,7 @@ void SensorService::sendDrivingStatusUnrestricted() {
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
-                std::bind(&SensorService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+                [&](const aasdk::error::Error& e) { onChannelError(e); });
   channel_->sendSensorEventIndication(indication, std::move(promise));
 }
 
@@ -129,8 +127,7 @@ void SensorService::sendNightData() {
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
-                std::bind(&SensorService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+                [&](const aasdk::error::Error& e) { onChannelError(e); });
   channel_->sendSensorEventIndication(indication, std::move(promise));
 }
 

@@ -50,9 +50,9 @@ SettingsWindow::SettingsWindow(
             ui_->lineEditExternalBluetoothAdapterAddress->setEnabled(false);
           });
   connect(ui_->pushButtonClearSelection, &QPushButton::clicked,
-          std::bind(&SettingsWindow::setButtonCheckBoxes, this, false));
+          [&]() { setButtonCheckBoxes(false); });
   connect(ui_->pushButtonSelectAll, &QPushButton::clicked,
-          std::bind(&SettingsWindow::setButtonCheckBoxes, this, true));
+          [&]() { setButtonCheckBoxes(true); });
   connect(ui_->pushButtonResetToDefaults, &QPushButton::clicked, this,
           &SettingsWindow::onResetToDefaults);
   connect(ui_->pushButtonShowBindings, &QPushButton::clicked, this,
@@ -278,37 +278,37 @@ void SettingsWindow::setButtonCheckBoxes(bool value) {
 void SettingsWindow::saveButtonCheckBoxes() {
   configuration::IConfiguration::ButtonCodes buttonCodes;
   saveButtonCheckBox(ui_->checkBoxPlayButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::PLAY);
+                     aasdk::proto::enums::ButtonCode::PLAY);
   saveButtonCheckBox(ui_->checkBoxPauseButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::PAUSE);
+                     aasdk::proto::enums::ButtonCode::PAUSE);
   saveButtonCheckBox(ui_->checkBoxTogglePlayButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::TOGGLE_PLAY);
+                     aasdk::proto::enums::ButtonCode::TOGGLE_PLAY);
   saveButtonCheckBox(ui_->checkBoxNextTrackButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::NEXT);
+                     aasdk::proto::enums::ButtonCode::NEXT);
   saveButtonCheckBox(ui_->checkBoxPreviousTrackButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::PREV);
+                     aasdk::proto::enums::ButtonCode::PREV);
   saveButtonCheckBox(ui_->checkBoxHomeButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::HOME);
+                     aasdk::proto::enums::ButtonCode::HOME);
   saveButtonCheckBox(ui_->checkBoxPhoneButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::PHONE);
+                     aasdk::proto::enums::ButtonCode::PHONE);
   saveButtonCheckBox(ui_->checkBoxCallEndButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::CALL_END);
+                     aasdk::proto::enums::ButtonCode::CALL_END);
   saveButtonCheckBox(ui_->checkBoxVoiceCommandButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::MICROPHONE_1);
+                     aasdk::proto::enums::ButtonCode::MICROPHONE_1);
   saveButtonCheckBox(ui_->checkBoxLeftButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::LEFT);
+                     aasdk::proto::enums::ButtonCode::LEFT);
   saveButtonCheckBox(ui_->checkBoxRightButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::RIGHT);
+                     aasdk::proto::enums::ButtonCode::RIGHT);
   saveButtonCheckBox(ui_->checkBoxUpButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::UP);
+                     aasdk::proto::enums::ButtonCode::UP);
   saveButtonCheckBox(ui_->checkBoxDownButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::DOWN);
+                     aasdk::proto::enums::ButtonCode::DOWN);
   saveButtonCheckBox(ui_->checkBoxScrollWheelButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::SCROLL_WHEEL);
+                     aasdk::proto::enums::ButtonCode::SCROLL_WHEEL);
   saveButtonCheckBox(ui_->checkBoxBackButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::BACK);
+                     aasdk::proto::enums::ButtonCode::BACK);
   saveButtonCheckBox(ui_->checkBoxEnterButton, buttonCodes,
-                           aasdk::proto::enums::ButtonCode::ENTER);
+                     aasdk::proto::enums::ButtonCode::ENTER);
   configuration_->setButtonCodes(buttonCodes);
 }
 

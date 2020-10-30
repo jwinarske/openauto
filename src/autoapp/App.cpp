@@ -21,6 +21,7 @@
 #include <f1x/openauto/Common/Log.hpp>
 #include <f1x/openauto/autoapp/App.hpp>
 #include <thread>
+#include <utility>
 
 namespace f1x {
 namespace openauto {
@@ -103,7 +104,7 @@ void App::aoapDeviceHandler(aasdk::usb::DeviceHandle deviceHandle) {
     connectedAccessoriesEnumerator_->cancel();
 
     auto aoapDevice(
-        aasdk::usb::AOAPDevice::create(usbWrapper_, ioService_, deviceHandle));
+        aasdk::usb::AOAPDevice::create(usbWrapper_, ioService_, std::move(deviceHandle)));
     androidAutoEntity_ =
         androidAutoEntityFactory_.create(std::move(aoapDevice));
     androidAutoEntity_->start(*this);
@@ -134,10 +135,11 @@ void App::waitForDevice() {
   OPENAUTO_LOG(info) << "[App] Waiting for device...";
 
   auto promise = aasdk::usb::IUSBHub::Promise::defer(strand_);
-  promise->then(std::bind(&App::aoapDeviceHandler, this->shared_from_this(),
-                          std::placeholders::_1),
-                std::bind(&App::onUSBHubError, this->shared_from_this(),
-                          std::placeholders::_1));
+  promise->then(
+      [&](aasdk::usb::DeviceHandle deviceHandle) {
+        aoapDeviceHandler(std::move(deviceHandle));
+      },
+      [&](const aasdk::error::Error& error) { onUSBHubError(error); });
   usbHub_->start(std::move(promise));
 }
 

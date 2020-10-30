@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
   auto configuration =
       std::make_shared<autoapp::configuration::Configuration>();
   autoapp::ui::SettingsWindow settingsWindow(configuration);
-  settingsWindow.setWindowFlags(Qt::WindowStaysOnTopHint);
+  //settingsWindow.setWindowFlags(Qt::WindowStaysOnTopHint);
 
   autoapp::configuration::RecentAddressesList recentAddressesList(7);
   recentAddressesList.read();
@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
   aasdk::tcp::TCPWrapper tcpWrapper;
   autoapp::ui::ConnectDialog connectDialog(ioService, tcpWrapper,
                                            recentAddressesList);
-  connectDialog.setWindowFlags(Qt::WindowStaysOnTopHint);
+  //connectDialog.setWindowFlags(Qt::WindowStaysOnTopHint);
 
   QObject::connect(&mainWindow, &autoapp::ui::MainWindow::exit,
                    []() { std::exit(0); });
@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
   QObject::connect(&mainWindow, &autoapp::ui::MainWindow::openConnectDialog,
                    &connectDialog, &autoapp::ui::ConnectDialog::exec);
 
-  QApplication::setOverrideCursor(Qt::BlankCursor);
+  //QApplication::setOverrideCursor(Qt::BlankCursor);
   QObject::connect(
       &mainWindow, &autoapp::ui::MainWindow::toggleCursor, []() {
         const auto cursor =
@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
 
   auto result = QApplication::exec();
   std::for_each(threadPool.begin(), threadPool.end(),
-                std::bind(&std::thread::join, std::placeholders::_1));
+                [](std::thread& t) { t.join(); });
 
   libusb_exit(usbContext);
   return result;

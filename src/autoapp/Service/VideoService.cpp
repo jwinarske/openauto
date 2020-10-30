@@ -62,8 +62,7 @@ void VideoService::onChannelOpenRequest(
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
-                std::bind(&VideoService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+                [&](const aasdk::error::Error& e) { onChannelError(e); });
   channel_->sendChannelOpenResponse(response, std::move(promise));
 
   channel_->receive(this->shared_from_this());
@@ -84,10 +83,9 @@ void VideoService::onAVChannelSetupRequest(
   response.add_configs(0);
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
-  promise->then(std::bind(&VideoService::sendVideoFocusIndication,
-                          this->shared_from_this()),
-                std::bind(&VideoService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+  promise->then([&]() { sendVideoFocusIndication(); },
+                [&](const aasdk::error::Error& e) { onChannelError(e); });
+
   channel_->sendAVChannelSetupResponse(response, std::move(promise));
   channel_->receive(this->shared_from_this());
 }
@@ -119,8 +117,7 @@ void VideoService::onAVMediaWithTimestampIndication(
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
-                std::bind(&VideoService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+                [&](const aasdk::error::Error& e) { onChannelError(e); });
   channel_->sendAVMediaAckIndication(indication, std::move(promise));
 
   channel_->receive(this->shared_from_this());
@@ -136,8 +133,7 @@ void VideoService::onAVMediaIndication(
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
-                std::bind(&VideoService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+                [&](const aasdk::error::Error& e) { onChannelError(e); });
   channel_->sendAVMediaAckIndication(indication, std::move(promise));
 
   channel_->receive(this->shared_from_this());
@@ -189,8 +185,7 @@ void VideoService::sendVideoFocusIndication() {
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
-                std::bind(&VideoService::onChannelError,
-                          this->shared_from_this(), std::placeholders::_1));
+                [&](const aasdk::error::Error& e) { onChannelError(e); });
   channel_->sendVideoFocusIndication(videoFocusIndication, std::move(promise));
 }
 
