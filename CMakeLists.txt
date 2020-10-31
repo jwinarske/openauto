@@ -74,12 +74,6 @@ set(autoapp_sources_directory ${sources_directory}/autoapp)
 set(autoapp_include_directory ${include_directory}/f1x/openauto/autoapp)
 file(GLOB_RECURSE autoapp_source_files ${autoapp_sources_directory}/*.ui ${autoapp_sources_directory}/*.cpp ${autoapp_include_directory}/*.hpp ${common_include_directory}/*.hpp ${resources_directory}/*.qrc)
 
-add_executable(lambda_test lambda_vs_bind.cpp)
-target_link_libraries(lambda_test ${Boost_LIBRARIES})
-
-add_executable(promise promise.cc)
-target_link_libraries(promise ${Boost_LIBRARIES})
-
 add_executable(autoapp ${autoapp_source_files})
 add_dependencies(autoapp dep-aasdk)
 
