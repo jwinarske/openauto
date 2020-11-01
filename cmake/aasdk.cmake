@@ -4,7 +4,7 @@ set(EXT_STAGING_DIR ${CMAKE_CURRENT_BINARY_DIR}/staging${CMAKE_INSTALL_PREFIX})
 
 ExternalProject_Add(dep-aasdk
     GIT_REPOSITORY https://github.com/jwinarske/aasdk.git
-    GIT_TAG update
+    GIT_TAG factor_out_boost
     GIT_SHALLOW ON
     CMAKE_ARGS
         -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}

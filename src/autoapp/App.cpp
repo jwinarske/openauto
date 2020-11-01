@@ -46,7 +46,6 @@ App::App(asio::io_service& ioService,
 
 void App::waitForUSBDevice() {
   asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    this->enumerateDevices();
     this->waitForDevice();
     this->enumerateDevices();
   });

@@ -85,6 +85,7 @@ int main(int argc, char* argv[]) {
   auto configuration =
       std::make_shared<autoapp::configuration::Configuration>();
   autoapp::ui::SettingsWindow settingsWindow(configuration);
+
   settingsWindow.setWindowFlags(Qt::WindowStaysOnTopHint);
 
   autoapp::configuration::RecentAddressesList recentAddressesList(7);

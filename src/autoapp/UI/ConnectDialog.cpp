@@ -50,7 +50,8 @@ void ConnectDialog::onConnectButtonClicked() {
   try {
     tcpWrapper_.asyncConnect(
         *socket, ipAddress, 5277,
-        [&](const asio::error_code& ec){ connectHandler(ec, ipAddress, socket); });
+        std::bind(&ConnectDialog::connectHandler, this, std::placeholders::_1,
+                  ipAddress, socket));        
   } catch (const asio::system_error& se) {
     emit connectionFailed(QString(se.what()));
   }
