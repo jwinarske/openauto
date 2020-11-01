@@ -59,11 +59,10 @@ bool RtAudioOutput::open() {
                        static_cast<void*>(this), &streamOptions);
       return audioBuffer_.open(QIODevice::ReadWrite);
     } catch (const RtAudioError& e) {
-      OPENAUTO_LOG(error)
-          << "[RtAudioOutput] Failed to open audio output, what: " << e.what();
+      spdlog::error("[RtAudioOutput] Failed to open audio output, what: {}", e.what());
     }
   } else {
-    OPENAUTO_LOG(error) << "[RtAudioOutput] No output devices found.";
+    spdlog::error("[RtAudioOutput] No output devices found.");
   }
 
   return false;
@@ -81,8 +80,7 @@ void RtAudioOutput::start() {
     try {
       dac_->startStream();
     } catch (const RtAudioError& e) {
-      OPENAUTO_LOG(error)
-          << "[RtAudioOutput] Failed to start audio output, what: " << e.what();
+      spdlog::error("[RtAudioOutput] Failed to start audio output, what: {}", e.what());
     }
   }
 }
@@ -118,9 +116,7 @@ void RtAudioOutput::doSuspend() {
     try {
       dac_->stopStream();
     } catch (const RtAudioError& e) {
-      OPENAUTO_LOG(error)
-          << "[RtAudioOutput] Failed to suspend audio output, what: "
-          << e.what();
+      spdlog::error("[RtAudioOutput] Failed to suspend audio output, what: {}", e.what());
     }
   }
 }

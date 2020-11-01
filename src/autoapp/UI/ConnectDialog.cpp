@@ -8,7 +8,7 @@ namespace autoapp {
 namespace ui {
 
 ConnectDialog::ConnectDialog(
-    boost::asio::io_service& ioService,
+    asio::io_service& ioService,
     aasdk::tcp::ITCPWrapper& tcpWrapper,
     openauto::autoapp::configuration::IRecentAddressesList& recentAddressesList,
     QWidget* parent)
@@ -45,19 +45,19 @@ void ConnectDialog::onConnectButtonClicked() {
   this->setControlsEnabledStatus(false);
 
   const auto& ipAddress = ui_->lineEditIPAddress->text().toStdString();
-  auto socket = std::make_shared<boost::asio::ip::tcp::socket>(ioService_);
+  auto socket = std::make_shared<asio::ip::tcp::socket>(ioService_);
 
   try {
     tcpWrapper_.asyncConnect(
         *socket, ipAddress, 5277,
-        [&](const boost::system::error_code& ec){ connectHandler(ec, ipAddress, socket); });
-  } catch (const boost::system::system_error& se) {
+        [&](const asio::error_code& ec){ connectHandler(ec, ipAddress, socket); });
+  } catch (const asio::system_error& se) {
     emit connectionFailed(QString(se.what()));
   }
 }
 
 void ConnectDialog::connectHandler(
-    const boost::system::error_code& ec,
+    const asio::error_code& ec,
     const std::string& ipAddress,
     aasdk::tcp::ITCPEndpoint::SocketPointer socket) {
   if (!ec) {

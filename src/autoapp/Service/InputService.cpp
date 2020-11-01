@@ -25,7 +25,7 @@ namespace openauto {
 namespace autoapp {
 namespace service {
 
-InputService::InputService(boost::asio::io_service& ioService,
+InputService::InputService(asio::io_service& ioService,
                            aasdk::messenger::IMessenger::Pointer messenger,
                            projection::IInputDevice::Pointer inputDevice)
     : strand_(ioService),
@@ -35,22 +35,22 @@ InputService::InputService(boost::asio::io_service& ioService,
       inputDevice_(std::move(inputDevice)) {}
 
 void InputService::start() {
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    OPENAUTO_LOG(info) << "[InputService] start.";
+  asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
+    spdlog::info("[InputService] start.");
     channel_->receive(this->shared_from_this());
   });
 }
 
 void InputService::stop() {
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    OPENAUTO_LOG(info) << "[InputService] stop.";
+  asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
+    spdlog::info("[InputService] stop.");
     inputDevice_->stop();
   });
 }
 
 void InputService::fillFeatures(
     aasdk::proto::messages::ServiceDiscoveryResponse& response) {
-  OPENAUTO_LOG(info) << "[InputService] fill features.";
+  spdlog::info("[InputService] fill features.");
 
   auto* channelDescriptor = response.add_channels();
   channelDescriptor->set_channel_id(static_cast<uint32_t>(channel_->getId()));
@@ -74,11 +74,11 @@ void InputService::fillFeatures(
 
 void InputService::onChannelOpenRequest(
     const aasdk::proto::messages::ChannelOpenRequest& request) {
-  OPENAUTO_LOG(info) << "[InputService] open request, priority: "
-                     << request.priority();
+  spdlog::info("[InputService] open request, priority: {:d}",
+                     request.priority());
   const aasdk::proto::enums::Status::Enum status =
       aasdk::proto::enums::Status::OK;
-  OPENAUTO_LOG(info) << "[InputService] open status: " << status;
+  spdlog::info("[InputService] open status: {:d}", status);
 
   aasdk::proto::messages::ChannelOpenResponse response;
   response.set_status(status);
@@ -93,8 +93,8 @@ void InputService::onChannelOpenRequest(
 
 void InputService::onBindingRequest(
     const aasdk::proto::messages::BindingRequest& request) {
-  OPENAUTO_LOG(info) << "[InputService] binding request, scan codes count: "
-                     << request.scan_codes_size();
+  spdlog::info("[InputService] binding request, scan codes count: {:d}",
+                     request.scan_codes_size());
 
   aasdk::proto::enums::Status::Enum status = aasdk::proto::enums::Status::OK;
   const auto& supportedButtonCodes = inputDevice_->getSupportedButtonCodes();
@@ -102,8 +102,8 @@ void InputService::onBindingRequest(
   for (int i = 0; i < request.scan_codes_size(); ++i) {
     if (std::find(supportedButtonCodes.begin(), supportedButtonCodes.end(),
                   request.scan_codes(i)) == supportedButtonCodes.end()) {
-      OPENAUTO_LOG(error) << "[InputService] binding request, scan code: "
-                          << request.scan_codes(i) << " is not supported.";
+      spdlog::error("[InputService] binding request, scan code: {:d}"
+                          " is not supported.", request.scan_codes(i));
 
       status = aasdk::proto::enums::Status::FAIL;
       break;
@@ -117,7 +117,7 @@ void InputService::onBindingRequest(
     inputDevice_->start(*this);
   }
 
-  OPENAUTO_LOG(info) << "[InputService] binding request, status: " << status;
+  spdlog::info("[InputService] binding request, status: {:d}", status);
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
@@ -127,14 +127,14 @@ void InputService::onBindingRequest(
 }
 
 void InputService::onChannelError(const aasdk::error::Error& e) {
-  OPENAUTO_LOG(error) << "[SensorService] channel error: " << e.what();
+  spdlog::error("[SensorService] channel error: {}", e.what());
 }
 
 void InputService::onButtonEvent(const projection::ButtonEvent& event) {
   auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
       std::chrono::high_resolution_clock::now().time_since_epoch());
 
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this(),
+  asio::dispatch(strand_, [this, self = this->shared_from_this(),
                                   event = event, timestamp = timestamp]() {
     aasdk::proto::messages::InputEventIndication inputEventIndication;
     inputEventIndication.set_timestamp(timestamp.count());
@@ -167,7 +167,7 @@ void InputService::onTouchEvent(const projection::TouchEvent& event) {
   auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
       std::chrono::high_resolution_clock::now().time_since_epoch());
 
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this(),
+  asio::dispatch(strand_, [this, self = this->shared_from_this(),
                                   event = event, timestamp = timestamp]() {
     aasdk::proto::messages::InputEventIndication inputEventIndication;
     inputEventIndication.set_timestamp(timestamp.count());

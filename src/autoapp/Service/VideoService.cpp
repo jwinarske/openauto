@@ -24,7 +24,7 @@ namespace openauto {
 namespace autoapp {
 namespace service {
 
-VideoService::VideoService(boost::asio::io_service& ioService,
+VideoService::VideoService(asio::io_service& ioService,
                            aasdk::messenger::IMessenger::Pointer messenger,
                            projection::IVideoOutput::Pointer videoOutput)
     : strand_(ioService),
@@ -35,27 +35,27 @@ VideoService::VideoService(boost::asio::io_service& ioService,
       session_(-1) {}
 
 void VideoService::start() {
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    OPENAUTO_LOG(info) << "[VideoService] start.";
+  asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
+    spdlog::info("[VideoService] start.");
     channel_->receive(this->shared_from_this());
   });
 }
 
 void VideoService::stop() {
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    OPENAUTO_LOG(info) << "[VideoService] stop.";
+  asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
+    spdlog::info("[VideoService] stop.");
     videoOutput_->stop();
   });
 }
 
 void VideoService::onChannelOpenRequest(
     const aasdk::proto::messages::ChannelOpenRequest& request) {
-  OPENAUTO_LOG(info) << "[VideoService] open request, priority: "
-                     << request.priority();
+  spdlog::info("[VideoService] open request, priority: {:d}",
+                     request.priority());
   const aasdk::proto::enums::Status::Enum status =
       videoOutput_->open() ? aasdk::proto::enums::Status::OK
                            : aasdk::proto::enums::Status::FAIL;
-  OPENAUTO_LOG(info) << "[VideoService] open status: " << status;
+  spdlog::info("[VideoService] open status: {:d}", status);
 
   aasdk::proto::messages::ChannelOpenResponse response;
   response.set_status(status);
@@ -70,12 +70,12 @@ void VideoService::onChannelOpenRequest(
 
 void VideoService::onAVChannelSetupRequest(
     const aasdk::proto::messages::AVChannelSetupRequest& request) {
-  OPENAUTO_LOG(info) << "[VideoService] setup request, config index: "
-                     << request.config_index();
+  spdlog::info("[VideoService] setup request, config index: {:d}",
+                     request.config_index());
   const aasdk::proto::enums::AVChannelSetupStatus::Enum status =
       videoOutput_->init() ? aasdk::proto::enums::AVChannelSetupStatus::OK
                            : aasdk::proto::enums::AVChannelSetupStatus::FAIL;
-  OPENAUTO_LOG(info) << "[VideoService] setup status: " << status;
+  spdlog::info("[VideoService] setup status: {:d}", status);
 
   aasdk::proto::messages::AVChannelSetupResponse response;
   response.set_media_status(status);
@@ -92,8 +92,8 @@ void VideoService::onAVChannelSetupRequest(
 
 void VideoService::onAVChannelStartIndication(
     const aasdk::proto::messages::AVChannelStartIndication& indication) {
-  OPENAUTO_LOG(info) << "[VideoService] start indication, session: "
-                     << indication.session();
+  spdlog::info("[VideoService] start indication, session: {:d}",
+                     indication.session());
   session_ = indication.session();
 
   channel_->receive(this->shared_from_this());
@@ -101,7 +101,7 @@ void VideoService::onAVChannelStartIndication(
 
 void VideoService::onAVChannelStopIndication(
     const aasdk::proto::messages::AVChannelStopIndication& indication) {
-  OPENAUTO_LOG(info) << "[VideoService] stop indication";
+  spdlog::info("[VideoService] stop indication");
 
   channel_->receive(this->shared_from_this());
 }
@@ -140,12 +140,12 @@ void VideoService::onAVMediaIndication(
 }
 
 void VideoService::onChannelError(const aasdk::error::Error& e) {
-  OPENAUTO_LOG(error) << "[VideoService] channel error: " << e.what();
+  spdlog::error("[VideoService] channel error: {}", e.what());
 }
 
 void VideoService::fillFeatures(
     aasdk::proto::messages::ServiceDiscoveryResponse& response) {
-  OPENAUTO_LOG(info) << "[VideoService] fill features.";
+  spdlog::info("[VideoService] fill features.");
 
   auto* channelDescriptor = response.add_channels();
   channelDescriptor->set_channel_id(static_cast<uint32_t>(channel_->getId()));
@@ -166,17 +166,17 @@ void VideoService::fillFeatures(
 
 void VideoService::onVideoFocusRequest(
     const aasdk::proto::messages::VideoFocusRequest& request) {
-  OPENAUTO_LOG(info) << "[VideoService] video focus request, display index: "
-                     << request.disp_index()
-                     << ", focus mode: " << request.focus_mode()
-                     << ", focus reason: " << request.focus_reason();
+  spdlog::info("[VideoService] video focus request, display index: {:d}, focus mode: {:d}, focus reason: {:d}",
+                     request.disp_index(),
+                     request.focus_mode(),
+                     request.focus_reason());
 
   this->sendVideoFocusIndication();
   channel_->receive(this->shared_from_this());
 }
 
 void VideoService::sendVideoFocusIndication() {
-  OPENAUTO_LOG(info) << "[VideoService] video focus indication.";
+  spdlog::info("[VideoService] video focus indication.");
 
   aasdk::proto::messages::VideoFocusIndication videoFocusIndication;
   videoFocusIndication.set_focus_mode(

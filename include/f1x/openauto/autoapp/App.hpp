@@ -35,7 +35,7 @@ class App : public service::IAndroidAutoEntityEventHandler,
  public:
   typedef std::shared_ptr<App> Pointer;
 
-  App(boost::asio::io_service& ioService,
+  App(asio::io_service& ioService,
       aasdk::usb::USBWrapper& usbWrapper,
       aasdk::tcp::ITCPWrapper& tcpWrapper,
       service::IAndroidAutoEntityFactory& androidAutoEntityFactory,
@@ -55,10 +55,10 @@ class App : public service::IAndroidAutoEntityEventHandler,
   void aoapDeviceHandler(aasdk::usb::DeviceHandle deviceHandle);
   void onUSBHubError(const aasdk::error::Error& error);
 
-  boost::asio::io_service& ioService_;
+  asio::io_service& ioService_;
   aasdk::usb::USBWrapper& usbWrapper_;
   aasdk::tcp::ITCPWrapper& tcpWrapper_;
-  boost::asio::io_service::strand strand_;
+  asio::io_service::strand strand_;
   service::IAndroidAutoEntityFactory& androidAutoEntityFactory_;
   aasdk::usb::IUSBHub::Pointer usbHub_;
   aasdk::usb::IConnectedAccessoriesEnumerator::Pointer

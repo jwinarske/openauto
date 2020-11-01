@@ -40,12 +40,11 @@ void AndroidBluetoothServer::onClientConnected() {
   auto socket = rfcommServer_->nextPendingConnection();
 
   if (socket != nullptr) {
-    OPENAUTO_LOG(info)
-        << "[AndroidBluetoothServer] rfcomm client connected, peer name: "
-        << socket->peerName().toStdString();
+    spdlog::info("[AndroidBluetoothServer] rfcomm client connected, peer name: {}", 
+        socket->peerName().toStdString());
   } else {
-    OPENAUTO_LOG(error) << "[AndroidBluetoothServer] received null socket "
-                           "during client connection.";
+    spdlog::error("[AndroidBluetoothServer] received null socket "
+                           "during client connection.");
   }
 }
 

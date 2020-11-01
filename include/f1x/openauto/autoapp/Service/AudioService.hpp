@@ -35,7 +35,7 @@ class AudioService
  public:
   typedef std::shared_ptr<AudioService> Pointer;
 
-  AudioService(boost::asio::io_service& ioService,
+  AudioService(asio::io_service& ioService,
                aasdk::channel::av::IAudioServiceChannel::Pointer channel,
                projection::IAudioOutput::Pointer audioOutput);
 
@@ -63,7 +63,7 @@ class AudioService
  protected:
   using std::enable_shared_from_this<AudioService>::shared_from_this;
 
-  boost::asio::io_service::strand strand_;
+  asio::io_service::strand strand_;
   aasdk::channel::av::IAudioServiceChannel::Pointer channel_;
   projection::IAudioOutput::Pointer audioOutput_;
   int32_t session_;

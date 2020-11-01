@@ -36,7 +36,7 @@ class VideoService
  public:
   typedef std::shared_ptr<VideoService> Pointer;
 
-  VideoService(boost::asio::io_service& ioService,
+  VideoService(asio::io_service& ioService,
                aasdk::messenger::IMessenger::Pointer messenger,
                projection::IVideoOutput::Pointer videoOutput);
 
@@ -67,7 +67,7 @@ class VideoService
   using std::enable_shared_from_this<VideoService>::shared_from_this;
   void sendVideoFocusIndication();
 
-  boost::asio::io_service::strand strand_;
+  asio::io_service::strand strand_;
   aasdk::channel::av::VideoServiceChannel::Pointer channel_;
   projection::IVideoOutput::Pointer videoOutput_;
   int32_t session_;

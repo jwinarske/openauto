@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
+#include <asio.hpp>
 #include <f1x/aasdk/Transport/ITransport.hpp>
 #include <f1x/openauto/autoapp/Configuration/IConfiguration.hpp>
 #include <f1x/openauto/autoapp/Service/IAndroidAutoEntityFactory.hpp>
@@ -31,7 +31,7 @@ namespace service {
 
 class AndroidAutoEntityFactory : public IAndroidAutoEntityFactory {
  public:
-  AndroidAutoEntityFactory(boost::asio::io_service& ioService,
+  AndroidAutoEntityFactory(asio::io_service& ioService,
                            configuration::IConfiguration::Pointer configuration,
                            IServiceFactory& serviceFactory);
 
@@ -44,7 +44,7 @@ class AndroidAutoEntityFactory : public IAndroidAutoEntityFactory {
   IAndroidAutoEntity::Pointer create(
       aasdk::transport::ITransport::Pointer transport);
 
-  boost::asio::io_service& ioService_;
+  asio::io_service& ioService_;
   configuration::IConfiguration::Pointer configuration_;
   IServiceFactory& serviceFactory_;
 };

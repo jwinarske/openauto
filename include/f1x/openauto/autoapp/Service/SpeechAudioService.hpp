@@ -28,7 +28,7 @@ namespace service {
 
 class SpeechAudioService : public AudioService {
  public:
-  SpeechAudioService(boost::asio::io_service& ioService,
+  SpeechAudioService(asio::io_service& ioService,
                      aasdk::messenger::IMessenger::Pointer messenger,
                      projection::IAudioOutput::Pointer audioOutput);
 };

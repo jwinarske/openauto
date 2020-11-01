@@ -4,7 +4,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
 
 project(openauto LANGUAGES CXX)
 
-find_package(Boost REQUIRED COMPONENTS system log)
+find_package(asio REQUIRED)
 find_package(libusb-1.0 REQUIRED)
 find_package(Qt5 COMPONENTS Multimedia MultimediaWidgets Bluetooth)
 find_package(Protobuf REQUIRED)
@@ -12,6 +12,7 @@ find_package(OpenSSL REQUIRED)
 find_package(rtaudio REQUIRED)
 
 include(aasdk)
+include(spdlog)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -27,10 +28,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${base_directory}/lib)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${base_directory}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${base_directory}/bin)
-
-set(Boost_USE_STATIC_LIBS OFF)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
 
 SET(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -57,7 +54,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
                     ${Qt5MultimediaWidgets_INCLUDE_DIRS}
                     ${Qt5Widgets_INCLUDE_DIRS}
                     ${Qt5Bluetooth_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS}
                     ${LIBUSB_1_INCLUDE_DIRS}
                     ${PROTOBUF_INCLUDE_DIR}
                     ${OPENSSL_INCLUDE_DIR}
@@ -75,10 +71,9 @@ set(autoapp_include_directory ${include_directory}/f1x/openauto/autoapp)
 file(GLOB_RECURSE autoapp_source_files ${autoapp_sources_directory}/*.ui ${autoapp_sources_directory}/*.cpp ${autoapp_include_directory}/*.hpp ${common_include_directory}/*.hpp ${resources_directory}/*.qrc)
 
 add_executable(autoapp ${autoapp_source_files})
-add_dependencies(autoapp dep-aasdk)
+add_dependencies(autoapp dep-aasdk dep-spdlog)
 
 target_link_libraries(autoapp
-                        ${Boost_LIBRARIES}
                         ${Qt5Multimedia_LIBRARIES}
                         ${Qt5MultimediaWidgets_LIBRARIES}
                         ${Qt5Bluetooth_LIBRARIES}
@@ -90,6 +85,8 @@ target_link_libraries(autoapp
                         ${RTAUDIO_LIBRARIES}
                         aasdk aasdk_proto)
 
+target_include_directories(autoapp PUBLIC ${SPDLOG_INCLUDE_DIR})
+target_compile_definitions(autoapp PUBLIC SPDLOG_HEADER_ONLY)
 install(TARGETS autoapp RUNTIME DESTINATION bin)
 
 set(btservice_sources_directory ${sources_directory}/btservice)

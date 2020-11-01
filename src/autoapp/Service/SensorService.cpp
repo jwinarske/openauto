@@ -25,7 +25,7 @@ namespace openauto {
 namespace autoapp {
 namespace service {
 
-SensorService::SensorService(boost::asio::io_service& ioService,
+SensorService::SensorService(asio::io_service& ioService,
                              aasdk::messenger::IMessenger::Pointer messenger)
     : strand_(ioService),
       channel_(std::make_shared<aasdk::channel::sensor::SensorServiceChannel>(
@@ -33,21 +33,21 @@ SensorService::SensorService(boost::asio::io_service& ioService,
           std::move(messenger))) {}
 
 void SensorService::start() {
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    OPENAUTO_LOG(info) << "[SensorService] start.";
+  asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
+    spdlog::info("[SensorService] start.");
     channel_->receive(this->shared_from_this());
   });
 }
 
 void SensorService::stop() {
-  boost::asio::dispatch(strand_, [self = this->shared_from_this()]() {
-    OPENAUTO_LOG(info) << "[SensorService] stop.";
+  asio::dispatch(strand_, [self = this->shared_from_this()]() {
+    spdlog::info("[SensorService] stop.");
   });
 }
 
 void SensorService::fillFeatures(
     aasdk::proto::messages::ServiceDiscoveryResponse& response) {
-  OPENAUTO_LOG(info) << "[SensorService] fill features.";
+  spdlog::info("[SensorService] fill features.");
 
   auto* channelDescriptor = response.add_channels();
   channelDescriptor->set_channel_id(static_cast<uint32_t>(channel_->getId()));
@@ -62,11 +62,10 @@ void SensorService::fillFeatures(
 
 void SensorService::onChannelOpenRequest(
     const aasdk::proto::messages::ChannelOpenRequest& request) {
-  OPENAUTO_LOG(info) << "[SensorService] open request, priority: "
-                     << request.priority();
+  spdlog::info("[SensorService] open request, priority: {:d}", request.priority());
   const aasdk::proto::enums::Status::Enum status =
       aasdk::proto::enums::Status::OK;
-  OPENAUTO_LOG(info) << "[SensorService] open status: " << status;
+  spdlog::info("[SensorService] open status: {:d}", status);
 
   aasdk::proto::messages::ChannelOpenResponse response;
   response.set_status(status);
@@ -81,8 +80,8 @@ void SensorService::onChannelOpenRequest(
 
 void SensorService::onSensorStartRequest(
     const aasdk::proto::messages::SensorStartRequestMessage& request) {
-  OPENAUTO_LOG(info) << "[SensorService] sensor start request, type: "
-                     << request.sensor_type();
+  spdlog::info("[SensorService] sensor start request, type: {:d}",
+                     request.sensor_type());
 
   aasdk::proto::messages::SensorStartResponseMessage response;
   response.set_status(aasdk::proto::enums::Status::OK);
@@ -132,7 +131,7 @@ void SensorService::sendNightData() {
 }
 
 void SensorService::onChannelError(const aasdk::error::Error& e) {
-  OPENAUTO_LOG(error) << "[SensorService] channel error: " << e.what();
+  spdlog::error("[SensorService] channel error: {}", e.what());
 }
 
 }  // namespace service

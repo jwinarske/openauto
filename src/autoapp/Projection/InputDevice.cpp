@@ -40,7 +40,7 @@ InputDevice::InputDevice(QObject& parent,
 void InputDevice::start(IInputDeviceEventHandler& eventHandler) {
   std::lock_guard<decltype(mutex_)> lock(mutex_);
 
-  OPENAUTO_LOG(info) << "[InputDevice] start.";
+  spdlog::info("[InputDevice] start.");
   eventHandler_ = &eventHandler;
   parent_.installEventFilter(this);
 }
@@ -48,7 +48,7 @@ void InputDevice::start(IInputDeviceEventHandler& eventHandler) {
 void InputDevice::stop() {
   std::lock_guard<decltype(mutex_)> lock(mutex_);
 
-  OPENAUTO_LOG(info) << "[InputDevice] stop.";
+  spdlog::info("[InputDevice] stop.");
   parent_.removeEventFilter(this);
   eventHandler_ = nullptr;
 }

@@ -35,7 +35,7 @@ class InputService
       public projection::IInputDeviceEventHandler,
       public std::enable_shared_from_this<InputService> {
  public:
-  InputService(boost::asio::io_service& ioService,
+  InputService(asio::io_service& ioService,
                aasdk::messenger::IMessenger::Pointer messenger,
                projection::IInputDevice::Pointer inputDevice);
 
@@ -54,7 +54,7 @@ class InputService
  private:
   using std::enable_shared_from_this<InputService>::shared_from_this;
 
-  boost::asio::io_service::strand strand_;
+  asio::io_service::strand strand_;
   aasdk::channel::input::InputServiceChannel::Pointer channel_;
   projection::IInputDevice::Pointer inputDevice_;
 };

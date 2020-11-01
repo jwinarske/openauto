@@ -25,7 +25,7 @@ namespace autoapp {
 namespace service {
 
 BluetoothService::BluetoothService(
-    boost::asio::io_service& ioService,
+    asio::io_service& ioService,
     aasdk::messenger::IMessenger::Pointer messenger,
     projection::IBluetoothDevice::Pointer bluetoothDevice)
     : strand_(ioService),
@@ -36,26 +36,26 @@ BluetoothService::BluetoothService(
       bluetoothDevice_(std::move(bluetoothDevice)) {}
 
 void BluetoothService::start() {
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    OPENAUTO_LOG(info) << "[BluetoothService] start.";
+  asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
+    spdlog::info("[BluetoothService] start.");
     channel_->receive(this->shared_from_this());
   });
 }
 
 void BluetoothService::stop() {
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    OPENAUTO_LOG(info) << "[BluetoothService] stop.";
+  asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
+    spdlog::info("[BluetoothService] stop.");
     bluetoothDevice_->stop();
   });
 }
 
 void BluetoothService::fillFeatures(
     aasdk::proto::messages::ServiceDiscoveryResponse& response) {
-  OPENAUTO_LOG(info) << "[BluetoothService] fill features";
+  spdlog::info("[BluetoothService] fill features");
 
   if (bluetoothDevice_->isAvailable()) {
-    OPENAUTO_LOG(info) << "[BluetoothService] sending local adapter address: "
-                       << bluetoothDevice_->getLocalAddress();
+    spdlog::info("[BluetoothService] sending local adapter address: {}",
+                       bluetoothDevice_->getLocalAddress());
 
     auto* channelDescriptor = response.add_channels();
     channelDescriptor->set_channel_id(static_cast<uint32_t>(channel_->getId()));
@@ -66,11 +66,11 @@ void BluetoothService::fillFeatures(
 
 void BluetoothService::onChannelOpenRequest(
     const aasdk::proto::messages::ChannelOpenRequest& request) {
-  OPENAUTO_LOG(info) << "[BluetoothService] open request, priority: "
-                     << request.priority();
+  spdlog::info("[BluetoothService] open request, priority: {:d}",
+                     request.priority());
   const aasdk::proto::enums::Status::Enum status =
       aasdk::proto::enums::Status::OK;
-  OPENAUTO_LOG(info) << "[BluetoothService] open status: " << status;
+  spdlog::info("[BluetoothService] open status: {:d}", status);
 
   aasdk::proto::messages::ChannelOpenResponse response;
   response.set_status(status);
@@ -84,8 +84,8 @@ void BluetoothService::onChannelOpenRequest(
 
 void BluetoothService::onBluetoothPairingRequest(
     const aasdk::proto::messages::BluetoothPairingRequest& request) {
-  OPENAUTO_LOG(info) << "[BluetoothService] pairing request, address: "
-                     << request.phone_address();
+  spdlog::info("[BluetoothService] pairing request, address: {}",
+                     request.phone_address());
 
   aasdk::proto::messages::BluetoothPairingResponse response;
 
@@ -103,7 +103,7 @@ void BluetoothService::onBluetoothPairingRequest(
 }
 
 void BluetoothService::onChannelError(const aasdk::error::Error& e) {
-  OPENAUTO_LOG(error) << "[BluetoothService] channel error: " << e.what();
+  spdlog::error("[BluetoothService] channel error: {}", e.what());
 }
 
 }  // namespace service

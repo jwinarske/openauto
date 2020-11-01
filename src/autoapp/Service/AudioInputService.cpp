@@ -25,7 +25,7 @@ namespace autoapp {
 namespace service {
 
 AudioInputService::AudioInputService(
-    boost::asio::io_service& ioService,
+    asio::io_service& ioService,
     aasdk::messenger::IMessenger::Pointer messenger,
     projection::IAudioInput::Pointer audioInput)
     : strand_(ioService),
@@ -36,22 +36,22 @@ AudioInputService::AudioInputService(
       session_(0) {}
 
 void AudioInputService::start() {
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    OPENAUTO_LOG(info) << "[AudioInputService] start.";
+  asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
+    spdlog::info("[AudioInputService] start.");
     channel_->receive(this->shared_from_this());
   });
 }
 
 void AudioInputService::stop() {
-  boost::asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    OPENAUTO_LOG(info) << "[AudioInputService] stop.";
+  asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
+    spdlog::info("[AudioInputService] stop.");
     audioInput_->stop();
   });
 }
 
 void AudioInputService::fillFeatures(
     aasdk::proto::messages::ServiceDiscoveryResponse& response) {
-  OPENAUTO_LOG(info) << "[AudioInputService] fill features.";
+  spdlog::info("[AudioInputService] fill features.");
 
   auto* channelDescriptor = response.add_channels();
   channelDescriptor->set_channel_id(static_cast<uint32_t>(channel_->getId()));
@@ -67,12 +67,11 @@ void AudioInputService::fillFeatures(
 
 void AudioInputService::onChannelOpenRequest(
     const aasdk::proto::messages::ChannelOpenRequest& request) {
-  OPENAUTO_LOG(info) << "[AudioInputService] open request, priority: "
-                     << request.priority();
+  spdlog::info("[AudioInputService] open request, priority: {:d}", request.priority());
   const aasdk::proto::enums::Status::Enum status =
       audioInput_->open() ? aasdk::proto::enums::Status::OK
                           : aasdk::proto::enums::Status::FAIL;
-  OPENAUTO_LOG(info) << "[AudioInputService] open status: " << status;
+  spdlog::info("[AudioInputService] open status: {:d}", status);
 
   aasdk::proto::messages::ChannelOpenResponse response;
   response.set_status(status);
@@ -87,11 +86,10 @@ void AudioInputService::onChannelOpenRequest(
 
 void AudioInputService::onAVChannelSetupRequest(
     const aasdk::proto::messages::AVChannelSetupRequest& request) {
-  OPENAUTO_LOG(info) << "[AudioInputService] setup request, config index: "
-                     << request.config_index();
+  spdlog::info("[AudioInputService] setup request, config index: {:d}", request.config_index());
   const aasdk::proto::enums::AVChannelSetupStatus::Enum status =
       aasdk::proto::enums::AVChannelSetupStatus::OK;
-  OPENAUTO_LOG(info) << "[AudioInputService] setup status: " << status;
+  spdlog::info("[AudioInputService] setup status: {:d}", status);
 
   aasdk::proto::messages::AVChannelSetupResponse response;
   response.set_media_status(status);
@@ -108,17 +106,15 @@ void AudioInputService::onAVChannelSetupRequest(
 
 void AudioInputService::onAVInputOpenRequest(
     const aasdk::proto::messages::AVInputOpenRequest& request) {
-  OPENAUTO_LOG(info) << "[AudioInputService] input open request, open: "
-                     << request.open() << ", anc: " << request.anc()
-                     << ", ec: " << request.ec()
-                     << ", max unacked: " << request.max_unacked();
+  spdlog::info("[AudioInputService] input open request, open: {}, anc: {}, ec: {}, max unacked: {:d}",
+      request.open(), request.anc(), request.ec(), request.max_unacked());
 
   if (request.open()) {
     auto startPromise = projection::IAudioInput::StartPromise::defer(strand_);
     startPromise->then(
         [&]() { onAudioInputOpenSucceed(); },
         [this, self = this->shared_from_this()]() {
-          OPENAUTO_LOG(error) << "[AudioInputService] audio input open failed.";
+          spdlog::error("[AudioInputService] audio input open failed.");
 
           aasdk::proto::messages::AVInputOpenResponse response;
           response.set_session(session_);
@@ -154,11 +150,11 @@ void AudioInputService::onAVMediaAckIndication(
 }
 
 void AudioInputService::onChannelError(const aasdk::error::Error& e) {
-  OPENAUTO_LOG(error) << "[AudioInputService] channel error: " << e.what();
+  spdlog::error("[AudioInputService] channel error: {}", e.what());
 }
 
 void AudioInputService::onAudioInputOpenSucceed() {
-  OPENAUTO_LOG(info) << "[AudioInputService] audio input open succeed.";
+  spdlog::info("[AudioInputService] audio input open succeed.");
 
   aasdk::proto::messages::AVInputOpenResponse response;
   response.set_session(session_);
@@ -189,8 +185,7 @@ void AudioInputService::readAudioInput() {
     readPromise->then(
         [&](const aasdk::common::Data& data) { onAudioInputDataReady(data); },
         []() {
-          OPENAUTO_LOG(info)
-              << "[AudioInputService] audio input read rejected.";
+          spdlog::info("[AudioInputService] audio input read rejected.");
         });
 
     audioInput_->read(std::move(readPromise));

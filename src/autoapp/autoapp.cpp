@@ -37,7 +37,7 @@ namespace aasdk = f1x::aasdk;
 namespace autoapp = f1x::openauto::autoapp;
 using ThreadPool = std::vector<std::thread>;
 
-void startUSBWorkers(boost::asio::io_service& ioService,
+void startUSBWorkers(asio::io_service& ioService,
                      libusb_context* usbContext,
                      ThreadPool& threadPool) {
   auto usbWorker = [&ioService, usbContext]() {
@@ -55,7 +55,7 @@ void startUSBWorkers(boost::asio::io_service& ioService,
   threadPool.emplace_back(usbWorker);
 }
 
-void startIOServiceWorkers(boost::asio::io_service& ioService,
+void startIOServiceWorkers(asio::io_service& ioService,
                            ThreadPool& threadPool) {
   auto ioServiceWorker = [&ioService]() { ioService.run(); };
 
@@ -68,12 +68,12 @@ void startIOServiceWorkers(boost::asio::io_service& ioService,
 int main(int argc, char* argv[]) {
   libusb_context* usbContext;
   if (libusb_init(&usbContext) != 0) {
-    OPENAUTO_LOG(error) << "[OpenAuto] libusb init failed.";
+    spdlog::error("[OpenAuto] libusb init failed.");
     return 1;
   }
 
-  boost::asio::io_service ioService;
-  boost::asio::io_service::work work(ioService);
+  asio::io_service ioService;
+  asio::io_service::work work(ioService);
   std::vector<std::thread> threadPool;
   startUSBWorkers(ioService, usbContext, threadPool);
   startIOServiceWorkers(ioService, threadPool);

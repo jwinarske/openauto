@@ -28,7 +28,7 @@ namespace service {
 
 class MediaAudioService : public AudioService {
  public:
-  MediaAudioService(boost::asio::io_service& ioService,
+  MediaAudioService(asio::io_service& ioService,
                     aasdk::messenger::IMessenger::Pointer messenger,
                     projection::IAudioOutput::Pointer audioOutput);
 };

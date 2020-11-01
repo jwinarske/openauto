@@ -27,7 +27,7 @@ namespace service {
 
 class Pinger : public IPinger, public std::enable_shared_from_this<Pinger> {
  public:
-  Pinger(boost::asio::io_service& ioService, time_t duration);
+  Pinger(asio::io_service& ioService, time_t duration);
 
   void ping(Promise::Pointer promise) override;
   void pong() override;
@@ -36,10 +36,10 @@ class Pinger : public IPinger, public std::enable_shared_from_this<Pinger> {
  private:
   using std::enable_shared_from_this<Pinger>::shared_from_this;
 
-  void onTimerExceeded(const boost::system::error_code& error);
+  void onTimerExceeded(const asio::error_code& error);
 
-  boost::asio::io_service::strand strand_;
-  boost::asio::deadline_timer timer_;
+  asio::io_service::strand strand_;
+  asio::steady_timer timer_;
   time_t duration_;
   bool cancelled_;
   Promise::Pointer promise_;

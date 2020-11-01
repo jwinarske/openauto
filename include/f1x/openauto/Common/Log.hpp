@@ -18,6 +18,7 @@
 
 #pragma once
 
-#include <boost/log/trivial.hpp>
+#include <spdlog/spdlog.h>
+#include <iostream>
 
-#define OPENAUTO_LOG(severity) BOOST_LOG_TRIVIAL(severity) << "[OpenAuto] "
+#define OPENAUTO_LOG(severity)  std::cout << "[openauto]"
