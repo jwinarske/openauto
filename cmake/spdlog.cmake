@@ -13,4 +13,10 @@ ExternalProject_Add(dep-spdlog
         -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         -D CMAKE_VERBOSE_MAKEFILE=ON
 )
-set(SPDLOG_INCLUDE_DIR ${EXT_STAGING_DIR}/include)
+
+add_library(spdlog INTERFACE IMPORTED GLOBAL)
+set_target_properties(spdlog PROPERTIES
+  INTERFACE_COMPILE_DEFINITIONS "SPDLOG_HEADER_ONLY"
+  INTERFACE_INCLUDE_DIRECTORIES "${EXT_STAGING_DIR}/include"
+)
+add_dependencies(spdlog dep-spdlog)

@@ -62,7 +62,7 @@ bool RtAudioOutput::open() {
       spdlog::error("[RtAudioOutput] Failed to open audio output, what: {}", e.what());
     }
   } else {
-    spdlog::error("[RtAudioOutput] No output devices found.");
+    spdlog::error("[RtAudioOutput] No output devices found");
   }
 
   return false;

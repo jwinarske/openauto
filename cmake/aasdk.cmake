@@ -15,4 +15,3 @@ ExternalProject_Add(dep-aasdk
         -D AASDK_TEST=OFF
         -D AASDK_CODE_COVERAGE=OFF
 )
-

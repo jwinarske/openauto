@@ -39,20 +39,20 @@ SettingsWindow::SettingsWindow(
   connect(ui_->horizontalSliderScreenDPI, &QSlider::valueChanged, this,
           &SettingsWindow::onUpdateScreenDPI);
   connect(ui_->radioButtonUseExternalBluetoothAdapter, &QRadioButton::clicked,
-          [&](bool checked) {
+          [this](bool checked) {
             ui_->lineEditExternalBluetoothAdapterAddress->setEnabled(checked);
           });
-  connect(ui_->radioButtonDisableBluetooth, &QRadioButton::clicked, [&]() {
+  connect(ui_->radioButtonDisableBluetooth, &QRadioButton::clicked, [this]() {
     ui_->lineEditExternalBluetoothAdapterAddress->setEnabled(false);
   });
   connect(ui_->radioButtonUseLocalBluetoothAdapter, &QRadioButton::clicked,
-          [&]() {
+          [this]() {
             ui_->lineEditExternalBluetoothAdapterAddress->setEnabled(false);
           });
   connect(ui_->pushButtonClearSelection, &QPushButton::clicked,
-          [&]() { setButtonCheckBoxes(false); });
+          [this]() { setButtonCheckBoxes(false); });
   connect(ui_->pushButtonSelectAll, &QPushButton::clicked,
-          [&]() { setButtonCheckBoxes(true); });
+          [this]() { setButtonCheckBoxes(true); });
   connect(ui_->pushButtonResetToDefaults, &QPushButton::clicked, this,
           &SettingsWindow::onResetToDefaults);
   connect(ui_->pushButtonShowBindings, &QPushButton::clicked, this,

@@ -37,14 +37,14 @@ BluetoothService::BluetoothService(
 
 void BluetoothService::start() {
   asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    spdlog::info("[BluetoothService] start.");
+    spdlog::info("[BluetoothService] start");
     channel_->receive(this->shared_from_this());
   });
 }
 
 void BluetoothService::stop() {
   asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    spdlog::info("[BluetoothService] stop.");
+    spdlog::info("[BluetoothService] stop");
     bluetoothDevice_->stop();
   });
 }
@@ -76,7 +76,7 @@ void BluetoothService::onChannelOpenRequest(
   response.set_status(status);
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
-  promise->then([]() {}, [&](const aasdk::error::Error& e){ onChannelError(e); });
+  promise->then([]() {}, [this, self = this->shared_from_this()](const aasdk::error::Error& e){ onChannelError(e); });
   channel_->sendChannelOpenResponse(response, std::move(promise));
 
   channel_->receive(this->shared_from_this());
@@ -96,7 +96,7 @@ void BluetoothService::onBluetoothPairingRequest(
                           : aasdk::proto::enums::BluetoothPairingStatus::FAIL);
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
-  promise->then([]() {}, [&](const aasdk::error::Error& e){ onChannelError(e); });
+  promise->then([]() {}, [this, self = this->shared_from_this()](const aasdk::error::Error& e){ onChannelError(e); });
   channel_->sendBluetoothPairingResponse(response, std::move(promise));
 
   channel_->receive(this->shared_from_this());

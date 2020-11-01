@@ -37,7 +37,7 @@ LocalBluetoothDevice::LocalBluetoothDevice() {
 }
 
 void LocalBluetoothDevice::createBluetoothLocalDevice() {
-  spdlog::debug("[LocalBluetoothDevice] create.");
+  spdlog::debug("[LocalBluetoothDevice] create");
 
   localDevice_ = std::make_unique<QBluetoothLocalDevice>(QBluetoothAddress());
 

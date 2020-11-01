@@ -44,7 +44,7 @@ void AndroidBluetoothServer::onClientConnected() {
         socket->peerName().toStdString());
   } else {
     spdlog::error("[AndroidBluetoothServer] received null socket "
-                           "during client connection.");
+                           "during client connection");
   }
 }
 

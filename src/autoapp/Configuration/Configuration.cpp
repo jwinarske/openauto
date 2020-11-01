@@ -74,7 +74,7 @@ Configuration::Configuration()
   try {
     boost::property_tree::ini_parser::read_ini(cConfigFileName, iniConfig);
   } catch (const boost::property_tree::ini_parser_error& e) {
-    spdlog::warn("[Configuration] failed to read configuration file: {}, error: {}. Using default configuration.", cConfigFileName, e.what());
+    spdlog::warn("[Configuration] failed to read configuration file: {}, error: {}. Using default configuration", cConfigFileName, e.what());
     return;
   }
 

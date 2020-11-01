@@ -57,7 +57,7 @@ void App::start(aasdk::tcp::ITCPEndpoint::SocketPointer socket) {
                                   socket = std::move(socket)]() mutable {
     if (androidAutoEntity_ != nullptr) {
       tcpWrapper_.close(*socket);
-      spdlog::warn("[App] android auto entity is still running.");
+      spdlog::warn("[App] android auto entity is still running");
       return;
     }
 
@@ -93,10 +93,10 @@ void App::stop() {
 }
 
 void App::aoapDeviceHandler(aasdk::usb::DeviceHandle deviceHandle) {
-  spdlog::info("[App] Device connected.");
+  spdlog::info("[App] Device connected");
 
   if (androidAutoEntity_ != nullptr) {
-    spdlog::warn("[App] android auto entity is still running.");
+    spdlog::warn("[App] android auto entity is still running");
     return;
   }
 
@@ -131,20 +131,20 @@ void App::enumerateDevices() {
 }
 
 void App::waitForDevice() {
-  spdlog::info("[App] Waiting for device...");
+  spdlog::info("[App] Waiting for device..");
 
   auto promise = aasdk::usb::IUSBHub::Promise::defer(strand_);
   promise->then(
-      [&](aasdk::usb::DeviceHandle deviceHandle) {
+      [this, self = this->shared_from_this()](aasdk::usb::DeviceHandle deviceHandle) {
         aoapDeviceHandler(std::move(deviceHandle));
       },
-      [&](const aasdk::error::Error& error) { onUSBHubError(error); });
+      [this, self = this->shared_from_this()](const aasdk::error::Error& error) { onUSBHubError(error); });
   usbHub_->start(std::move(promise));
 }
 
 void App::onAndroidAutoQuit() {
   asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    spdlog::info("[App] quit.");
+    spdlog::info("[App] quit");
 
     androidAutoEntity_->stop();
     androidAutoEntity_.reset();

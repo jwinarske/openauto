@@ -36,21 +36,21 @@ InputService::InputService(asio::io_service& ioService,
 
 void InputService::start() {
   asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    spdlog::info("[InputService] start.");
+    spdlog::info("[InputService] start");
     channel_->receive(this->shared_from_this());
   });
 }
 
 void InputService::stop() {
   asio::dispatch(strand_, [this, self = this->shared_from_this()]() {
-    spdlog::info("[InputService] stop.");
+    spdlog::info("[InputService] stop");
     inputDevice_->stop();
   });
 }
 
 void InputService::fillFeatures(
     aasdk::proto::messages::ServiceDiscoveryResponse& response) {
-  spdlog::info("[InputService] fill features.");
+  spdlog::info("[InputService] fill features");
 
   auto* channelDescriptor = response.add_channels();
   channelDescriptor->set_channel_id(static_cast<uint32_t>(channel_->getId()));
@@ -85,7 +85,7 @@ void InputService::onChannelOpenRequest(
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
-                [&](const aasdk::error::Error& e) { onChannelError(e); });
+                [this, self = this->shared_from_this()](const aasdk::error::Error& e) { onChannelError(e); });
   channel_->sendChannelOpenResponse(response, std::move(promise));
 
   channel_->receive(this->shared_from_this());
@@ -103,7 +103,7 @@ void InputService::onBindingRequest(
     if (std::find(supportedButtonCodes.begin(), supportedButtonCodes.end(),
                   request.scan_codes(i)) == supportedButtonCodes.end()) {
       spdlog::error("[InputService] binding request, scan code: {:d}"
-                          " is not supported.", request.scan_codes(i));
+                          " is not supported", request.scan_codes(i));
 
       status = aasdk::proto::enums::Status::FAIL;
       break;
@@ -121,7 +121,7 @@ void InputService::onBindingRequest(
 
   auto promise = aasdk::channel::SendPromise::defer(strand_);
   promise->then([]() {},
-                [&](const aasdk::error::Error& e) { onChannelError(e); });
+                [this, self = this->shared_from_this()](const aasdk::error::Error& e) { onChannelError(e); });
   channel_->sendBindingResponse(response, std::move(promise));
   channel_->receive(this->shared_from_this());
 }
@@ -157,7 +157,7 @@ void InputService::onButtonEvent(const projection::ButtonEvent& event) {
 
     auto promise = aasdk::channel::SendPromise::defer(strand_);
     promise->then([]() {},
-                  [&](const aasdk::error::Error& e) { onChannelError(e); });
+                  [this, self = this->shared_from_this()](const aasdk::error::Error& e) { onChannelError(e); });
     channel_->sendInputEventIndication(inputEventIndication,
                                        std::move(promise));
   });
@@ -181,7 +181,7 @@ void InputService::onTouchEvent(const projection::TouchEvent& event) {
 
     auto promise = aasdk::channel::SendPromise::defer(strand_);
     promise->then([]() {},
-                  [&](const aasdk::error::Error& e) { onChannelError(e); });
+                  [this, self = this->shared_from_this()](const aasdk::error::Error& e) { onChannelError(e); });
     channel_->sendInputEventIndication(inputEventIndication,
                                        std::move(promise));
   });

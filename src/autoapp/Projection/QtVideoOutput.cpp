@@ -39,7 +39,7 @@ QtVideoOutput::QtVideoOutput(
 }
 
 void QtVideoOutput::createVideoOutput() {
-  spdlog::debug("[QtVideoOutput] create.");
+  spdlog::debug("[QtVideoOutput] create");
   videoWidget_ = std::make_unique<QVideoWidget>();
   mediaPlayer_ =
       std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback);

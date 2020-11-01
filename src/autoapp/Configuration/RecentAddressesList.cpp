@@ -72,7 +72,7 @@ void RecentAddressesList::load() {
       }
     }
   } catch (const boost::property_tree::ini_parser_error& e) {
-    spdlog::warn("[RecentAddressesList] failed to read configuration file: {}, error: {}. Empty list will be used.", cConfigFileName, e.what());
+    spdlog::warn("[RecentAddressesList] failed to read configuration file: {}, error: {}. Empty list will be used", cConfigFileName, e.what());
   }
 }
 

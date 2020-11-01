@@ -34,8 +34,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_INIT} -Wall -pedantic")
 
-add_definitions(-DBOOST_ALL_DYN_LINK)
-
 if(WIN32)
     set(WINSOCK2_LIBRARIES "ws2_32")
 endif(WIN32)
@@ -71,7 +69,7 @@ set(autoapp_include_directory ${include_directory}/f1x/openauto/autoapp)
 file(GLOB_RECURSE autoapp_source_files ${autoapp_sources_directory}/*.ui ${autoapp_sources_directory}/*.cpp ${autoapp_include_directory}/*.hpp ${common_include_directory}/*.hpp ${resources_directory}/*.qrc)
 
 add_executable(autoapp ${autoapp_source_files})
-add_dependencies(autoapp dep-aasdk dep-spdlog)
+add_dependencies(autoapp dep-aasdk spdlog)
 
 target_link_libraries(autoapp
                         ${Qt5Multimedia_LIBRARIES}
@@ -86,7 +84,7 @@ target_link_libraries(autoapp
                         aasdk aasdk_proto)
 
 target_include_directories(autoapp PUBLIC ${SPDLOG_INCLUDE_DIR})
-target_compile_definitions(autoapp PUBLIC SPDLOG_HEADER_ONLY)
+#target_compile_definitions(autoapp PUBLIC SPDLOG_HEADER_ONLY)
 install(TARGETS autoapp RUNTIME DESTINATION bin)
 
 set(btservice_sources_directory ${sources_directory}/btservice)
@@ -97,7 +95,6 @@ add_executable(btservice ${btservice_source_files})
 add_dependencies(btservice dep-aasdk)
 
 target_link_libraries(btservice
-                        ${Boost_LIBRARIES}
                         ${Qt5Bluetooth_LIBRARIES}
                         ${Qt5MultimediaWidgets_LIBRARIES}
                         ${PROTOBUF_LIBRARIES}

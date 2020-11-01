@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 
   btservice::AndroidBluetoothServer androidBluetoothServer;
   if (!androidBluetoothServer.start(address, portNumber)) {
-    spdlog::error("[btservice] Server start failed.");
+    spdlog::error("[btservice] Server start failed");
     return 2;
   }
 
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 
   btservice::AndroidBluetoothService androidBluetoothService(portNumber);
   if (!androidBluetoothService.registerService(address)) {
-    spdlog::error("[btservice] Service registration failed.");
+    spdlog::error("[btservice] Service registration failed");
     return 1;
   } else {
     spdlog::info("[btservice] Service registered, port: {:d}", portNumber);
